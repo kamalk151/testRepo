@@ -11,8 +11,9 @@ import LoginPage from './Components/Login';
 import Signup from './Components/Signup';
 import ProtectRoute from './ProtectRoute';
 import UserAction from './Actions/User.action';
+import UseLocalStorag from './Components/customHooks/index';
 
-function App() {
+function App() { 
   let themeValue =  {
     backgroundColor: '#ddd'
   }
@@ -26,8 +27,8 @@ function App() {
             <Route path="/" exact ><Index gunName="Ak27" /></Route>
             <Route path="/login" ><LoginPage gunName="Ak27" /></Route>
             <Route path="/signup" ><Signup gunName="Ak27" /></Route>
-            <ProtectRoute Component={Dashboard} path="/dashboard" gunName="Dashboard"/>
-            <ProtectRoute Component={Admin} path="/admin" gunName="Admin"/>
+            <ProtectRoute component={Dashboard} path="/dashboard" gunName="Dashboard"/>
+            <ProtectRoute component={Admin} path="/admin" gunName="Admin"/>
             <Route path="*" render={() => {
               return <h1>No Match</h1>
             }}>
@@ -42,7 +43,12 @@ function App() {
 function Header(props) {
   let userDetail  = useSelector(state => state.user)  
   let dispatch = useDispatch()
-  
+  let userDetailLocal  = UseLocalStorag({type:'get', itemKey:'userDetail' })    
+  if(userDetailLocal && userDetailLocal.email) {
+    let userStr = {...userDetailLocal, isAuth:true, _token:'token'};        
+    dispatch(UserAction.Login(userStr));  
+  }
+
   let logout = () => {     
     localStorage.removeItem('userDetail')
     dispatch(UserAction.Logout())

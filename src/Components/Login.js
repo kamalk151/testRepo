@@ -5,7 +5,7 @@ import {Form, Button} from 'react-bootstrap'
 import useLocalStorag from './customHooks/index'
 import userAction from './../Actions/User.action';
 
-function LoginPage() {
+function LoginPage(props) {
   let dispatch = useDispatch()
   let userDetail  = useLocalStorag({type:'get', itemKey:'userDetail' })    
   let [email, setEmail] = useState('k@yopmail.com')
@@ -13,7 +13,7 @@ function LoginPage() {
   let [msg, setMsg] = useState('')
   let history = useHistory()
 
-  useEffect(() => {    
+  useEffect(() => {
     if(userDetail && userDetail.isAuth) {
       history.push('/')
     }
@@ -22,19 +22,19 @@ function LoginPage() {
   let formHandler = (e) => {
     e.preventDefault();
     if(userDetail && userDetail.email == email) {
-      let userStr = {...userDetail, loginStatus:true, _token:'token'};
-      localStorage.setItem('userDetail', JSON.stringify({...userDetail, loginStatus:true, _token:'token'}));     
+      let userStr = {...userDetail, isAuth:true, _token:'token'};
+      localStorage.setItem('userDetail', JSON.stringify(userStr));     
       dispatch(userAction.Login(userStr));
       history.push('/')      
     } else {
       setMsg('Invalid Credential!')
     }
   }
-
-  return (   
+   
+  return (
       <div className="col-md-6">
         <fieldset>        
-          <legend> Login Form:</legend>
+          <legend> Login Form: {props.name} d</legend>
           <Form action="/dashboard" onSubmit={formHandler} className="col-md-12">
             <Form.Group controlId="username">
               <Form.Label className="pd-5 mr-10"> Email Address </Form.Label> 
