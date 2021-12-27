@@ -4,69 +4,49 @@ const {
   hashPassword,
   verifyPassword,
 } = require("./../libs/helper/commonFiles");
+
 /**
  * Find user details by user id
  * @param {*} req
  * @param {*} res
  * returns json object
  */
-const detailsById = async (req, res) => {
+const login = async (req, res) => {
   try {
-    userModel.findById(req.body.id, (err, data) => {
-      if (err) {
-        return res.status(500).json({ status: "error", msgText: err });
+    if (!req.body.password || !req.body.username) {
+      return res
+        .status(401)
+        .json({ status: "error", msgText: "Invalid Request" });
+    }
+    console.log("=================");
+    /*Encypt password */
+    let salt = Number(process.env.SALT);
+    let hash = hashPassword(req.body.password, salt);
+
+    userModel.findOne(
+      { username: req.body.username, password: hash },
+      (err, data) => {
+        if (err) {
+          return res.status(500).json({ status: "error", msgText: err });
+        }
+        return res.send(data);
       }
-      return res.send(data);
-    });
+    );
   } catch (err) {
     return res.status(500).json({ status: "errors", msgText: err });
   }
 };
 
 /**
- * Update method to update user details
- * @param {*} req
- * @param {*} res
- * @returns
- */
-const updateById = async (req, res) => {
-  try {
-    if (!req.body) {
-      return res
-        .status(400)
-        .json({ status: "error", msgText: "invalid request" });
-    }
-
-    let updateData = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      username: req.body.username,
-    };
-    userModel.findByIdAndUpdate(req.body.id, updateData, function (err, data) {
-      if (err) {
-        return res.status(500).json({ status: "error", msgText: err });
-      }
-      return res.status(200).json({
-        status: "success",
-        msgText: "Successfully got updated.",
-        data,
-      });
-    });
-  } catch (err) {
-    return res.status(500).json({ status: "error", msgText: err });
-  }
-};
-
-/**
- * Reset Password is for updating the password
+ * Forgot Password is for updating the password
  * @param {*} req
  * @param {*} res
  */
-const resetPassword = async (req, res) => {
+const forgotPassword = async (req, res) => {
   if (!req.body.password) {
     return res
       .status(401)
-      .json({ status: "error", msgText: "invalid arguments." });
+      .json({ status: "error", msgText: "invalid reequest." });
   }
 
   if (req.body.password !== req.body.confirm_password) {
@@ -109,13 +89,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-const updateAddressById = async (req, res) => {
-  res.send(" hi kamla");
-};
-
-const addressListById = async (req, res) => {
-  res.send(" hi kamla");
-};
 /**
  * Create method to store user information
  * @param {*} req
@@ -150,12 +123,10 @@ const createUser = async (req, res) => {
   }
 };
 
-const userRoutes = {
-  detailsById,
-  addressListById,
-  updateAddressById,
-  resetPassword,
-  updateById,
+const authRoutes = {
+  login,
+  forgotPassword,
   createUser,
 };
-module.exports = userRoutes;
+
+module.exports = authRoutes;
