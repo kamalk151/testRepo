@@ -1,14 +1,10 @@
 var express = require("express");
-var {
-  login,
-  createUser,
-  forgotPassword,
-} = require("./../controllers/userController");
-
+var {login,  forgotPassword, createUser, userList } = require("./../controllers/authController");
 var router = express.Router();
 
 router.post("/login", login);
-router.post("/forgot-password", forgotPassword);
+router.patch("/forgot-password", forgotPassword);
 router.post("/create", createUser);
+router.post("/user-list", userList);
 
 module.exports = router;

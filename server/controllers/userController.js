@@ -12,14 +12,16 @@ const {
  */
 const detailsById = async (req, res) => {
   try {
-    userModel.findById(req.body.id, (err, data) => {
+    userModel.findById(req.body.id, (err, data) => {    
+      console.log(data)
+      console.log(userModel.checkModel)   
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
-      }
-      return res.send(data);
-    });
+      }  
+      return res.status(200).json({ status: "success", msgText: lang.got_result, data });      
+    })
   } catch (err) {
-    return res.status(500).json({ status: "errors", msgText: err });
+    return res.status(500).json({ status: "error", msgText: err });
   }
 };
 

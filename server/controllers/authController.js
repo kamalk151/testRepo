@@ -1,4 +1,5 @@
 const userModel = require("./../models/userModel");
+const jwt = require('jsonwebtoken')
 const lang = require("./../libs/lang/lang");
 const {
   hashPassword,
@@ -12,26 +13,24 @@ const {
  * returns json object
  */
 const login = async (req, res) => {
-  try {
+  try {    
     if (!req.body.password || !req.body.username) {
       return res
         .status(401)
         .json({ status: "error", msgText: "Invalid Request" });
-    }
-    console.log("=================");
-    /*Encypt password */
-    let salt = Number(process.env.SALT);
-    let hash = hashPassword(req.body.password, salt);
+    }    
+    userModel.findOne({ username: req.body.username}).select('+password')
+    .then(data => {
+      if(verifyPassword(req.body.password, data.password)){
+        let token = jwt.sign({username:req.body.username}, 'secret', { expiresIn: 60*60 })
 
-    userModel.findOne(
-      { username: req.body.username, password: hash },
-      (err, data) => {
-        if (err) {
-          return res.status(500).json({ status: "error", msgText: err });
-        }
-        return res.send(data);
+        return res.status(500).json({ status: "success", msgText: lang.got_result, data, token:token});  
       }
-    );
+      return res.status(500).json({ status: "error", msgText: lang.password_not_match });
+    }).catch(err=>{
+      return res.status(500).json({ status: "error", msgText: err });      
+    });
+
   } catch (err) {
     return res.status(500).json({ status: "errors", msgText: err });
   }
@@ -43,25 +42,22 @@ const login = async (req, res) => {
  * @param {*} res
  */
 const forgotPassword = async (req, res) => {
-  if (!req.body.password) {
-    return res
-      .status(401)
-      .json({ status: "error", msgText: "invalid reequest." });
-  }
+    if (!req.body.password) {
+      return res
+        .status(401)
+        .json({ status: "error", msgText: "invalid reequest." });
+    }
 
-  if (req.body.password !== req.body.confirm_password) {
-    return res
-      .status(403)
-      .json({ status: "error", msgText: lang.confirm_password });
-  }
+    if (req.body.password !== req.body.confirm_password) {    
+      return res
+        .status(401)
+        .json({ status: "error", msgText: lang.cpassword_not_match });
+    }
 
-  try {
-    userModel
-      .findOne({ _id: req.body.id })
-      .select("+password")
+    userModel.findOne({ username: req.body.username })
       .then((data) => {
-        console.log("data", data);
-        if (verifyPassword(req.body.old_password, data.password)) {
+          if(data) {     
+            console.log(data);   
           /*Encypt password */
           let salt = Number(process.env.SALT);
           let hash = hashPassword(req.body.password, salt);
@@ -69,7 +65,7 @@ const forgotPassword = async (req, res) => {
           data.password = hash;
           data.save((err) => {
             if (err) {
-              return res.status(501).json({ status: "error", msgText: err });
+              return res.status(500).json({ status: "error", msgText: '' + err });
             }
           });
           return res
@@ -77,16 +73,12 @@ const forgotPassword = async (req, res) => {
             .json({ status: "success", msgText: lang.got_updated });
         }
 
-        return res
-          .status(403)
-          .json({ status: "error", msgText: lang.password_not_match });
-      })
-      .catch((err) => {
-        res.status(501).json({ status: "error", msgText: err });
+        res.status(403).json({ status: "error", msgText: lang.went_wrong });
+
+      }).catch((err) => {
+        res.status(403).json({ status: "error", msgText: '' + err });
       });
-  } catch (err) {
-    res.status(501).json({ status: "error", msgText: err });
-  }
+
 };
 
 /**
@@ -96,11 +88,11 @@ const forgotPassword = async (req, res) => {
  */
 const createUser = async (req, res) => {
   try {
-    console.log(req.body, process.env.SALT);
+    
     /*Encypt password */
     let salt = Number(process.env.SALT);
     let hash = hashPassword(req.body.password, salt);
-
+    userModel.findOne({ username: req.body.username})
     let data = new userModel();
     data.first_name = req.body.first_name;
     data.last_name = req.body.last_name;
@@ -123,10 +115,32 @@ const createUser = async (req, res) => {
   }
 };
 
+/**
+ * Find all user
+ * @param {*} req
+ * @param {*} res
+ * returns json object
+ */
+ const userList = async (req, res) => {
+  try {    
+    
+    userModel.find({}, (err, data) => {
+        if (err) {
+          return res.status(500).json({ status: "error", msgText: err });
+        }
+        return res.status(200).json({ status: "success", msgText: lang.got_result, data});
+      }
+    );
+  } catch (err) {
+    return res.status(500).json({ status: "errors", msgText: err });
+  }
+};
+
 const authRoutes = {
   login,
   forgotPassword,
   createUser,
+  userList
 };
 
 module.exports = authRoutes;

@@ -10,4 +10,7 @@ const userSchema = new Mongoose.Schema({
   updated_at: Date,
 });
 
+userSchema.method.checkModel = () =>{
+  console.log('new method')
+}
 module.exports = Mongoose.model("users", userSchema);
