@@ -1,15 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./assets/login.css";
+import "./assets/header.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <React.StrictMode>
+  
     <React.Fragment>
       <App />
-    </React.Fragment>
-  </React.StrictMode>,
+    </React.Fragment>,
+  
   document.getElementById("root")
 );
 

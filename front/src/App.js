@@ -1,4 +1,5 @@
-import { Fragment } from "react";
+import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router } from "react-router-dom";
 import MyRoutes from "./routes";
 import Navbar from "./component/layout/navbar";
@@ -6,8 +7,11 @@ import Navbar from "./component/layout/navbar";
 function App() {
   return (
     <Router>
+      
       <Navbar />
-      <MyRoutes />
+      <React.StrictMode>
+        <MyRoutes />
+      </React.StrictMode>
     </Router>
   );
 }
