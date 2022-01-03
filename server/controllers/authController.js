@@ -12,7 +12,8 @@ const {
  * @param {*} res
  * returns json object
  */
-const login = async (req, res) => {
+const login = async (req, res) => { 
+
   try {
     if (!req.body.password || !req.body.username) {
       return res
@@ -25,14 +26,23 @@ const login = async (req, res) => {
       .then((data) => {
         if (verifyPassword(req.body.password, data.password)) {
           let token = jwt.sign({ username: req.body.username }, "secret", {
-            expiresIn: 60 * 60,
+            expiresIn: 1 * 60,
           });
-
+          let refreshToken = jwt.sign({ username: req.body.username }, "refreshSecret", {
+            expiresIn: 3 * 60,
+          });
+          // res.jwt = token;
+          // res.session.jwt = token;         
+          res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 180000, });
+          
+          console.log('cookie have created successfully');
+          
           return res.status(200).json({
             status: "success",
             msgText: lang.got_result,
             data,
             token: token,
+            refreshToken: refreshToken
           });
         }
         return res
@@ -40,10 +50,10 @@ const login = async (req, res) => {
           .json({ status: "error", msgText: lang.password_not_match });
       })
       .catch((err) => {
-        return res.status(500).json({ status: "error", msgText: err });
+        return res.status(403).json({ status: "error", msgText: ''+err });
       });
   } catch (err) {
-    return res.status(500).json({ status: "errors", msgText: err });
+    return res.status(500).json({ status: "errors", msgText: ''+err });
   }
 };
 
@@ -131,26 +141,37 @@ const createUser = async (req, res) => {
  * @param {*} res
  * returns json object
  */
-const userList = async (req, res) => {
+const userList = async (req, res) => { 
   try {
+    console.log(req.cookies,'==cookies--',req.cookies.refreshToken)
+    console.log(jwt.verify(req.cookies.refreshToken,'refreshSecret'))
     userModel.find({}, (err, data) => {
-      if (err) {
+      if (err) { 
         return res.status(500).json({ status: "error", msgText: err });
       }
       return res
         .status(200)
         .json({ status: "success", msgText: lang.got_result, data });
     });
-  } catch (err) {
+  } catch (err) { 
     return res.status(500).json({ status: "errors", msgText: err });
   }
 };
+
+/**
+ * Refresh token function 
+ */
+const refreshToken = (req, res)=> {
+
+
+}
 
 const authRoutes = {
   login,
   forgotPassword,
   createUser,
   userList,
+  refreshToken
 };
 
 module.exports = authRoutes;
