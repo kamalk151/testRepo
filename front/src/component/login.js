@@ -1,8 +1,8 @@
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
-import {AppContext} from  './../context'
-import { Link, useNavigate } from "react-router-dom"; 
+import { AppContext } from "./../context";
+import { Link, useNavigate } from "react-router-dom";
 /**
  *
  * @returns
@@ -10,9 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 function Login() {
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
-  let {user,userAction} = useContext(AppContext)
-
-  console.log(user,'==' ,userAction, 'userContext')
+  let contextApi = useContext(AppContext);
   let navigate = useNavigate();
 
   let formHandler = async (e) => {
@@ -28,12 +26,14 @@ function Login() {
         username: username,
         password: password,
       })
-      .then((data) => {
-        console.log(data, '===');    
-        data.headers['authorization'] = `Bearer ${data.data.token}`;        
-        //data.cookie('token','oksdaoasfas fa')        
-        userAction('login',[ loginStatus => true, userData=> data.data])
-        console.log(data, '===');
+      .then((result) => {
+        result.headers["authorization"] = `Bearer ${result.data.token}`;
+
+        contextApi.dispatchUserEvent("login", {
+          loginStatus: true,
+          userData: result.data,
+        });
+
         alert("Successfully logged-in");
         navigate("/dashboard");
       })

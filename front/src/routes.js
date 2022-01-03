@@ -7,6 +7,7 @@ import Signup from "./component/signup";
 import Forget from "./component/forget";
 import Dashboard from "./component/user-dashboard/dashboard";
 import AdminDashboard from "./component/admin-dashboard/dashboard";
+import Logout from "./component/logout";
 
 function MyRoutes() {
   return (
@@ -19,6 +20,7 @@ function MyRoutes() {
       <Route path="/forget" element={<Forget />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/logout" element={<Logout />} />
     </Routes>
   );
 }
