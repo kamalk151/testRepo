@@ -15,26 +15,30 @@ var router = express.Router();
  * @param {*} next
  * @returns
  */
- const refreshToken = (req,res) => {
-  
+const refreshToken = (req, res) => {
   try {
     if (
       Object.keys(req.cookies).length != 0 &&
       req.cookies.refreshToken !== undefined
     ) {
       let refreshToken = req.cookies.refreshToken;
-      let tokenVal = "";      
-      if ((tokenVal = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET))) {
-        let token = jwt.sign({ username: tokenVal.username }, process.env.JWT_ACCESS_SECRET, {
-          expiresIn: 10 * 60, //#Number(process.env.JWT_ACCESS_EXPIREIN)
-        });        
-        res.set('token', token);
+      let tokenVal = "";
+      if (
+        (tokenVal = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET))
+      ) {
+        let token = jwt.sign(
+          { username: tokenVal.username },
+          process.env.JWT_ACCESS_SECRET,
+          {
+            expiresIn: 10 * 60, //#Number(process.env.JWT_ACCESS_EXPIREIN)
+          }
+        );
+        res.set("token", token);
         console.warn("Token Verified new", tokenVal);
         return true;
       }
     }
     return false;
-  
   } catch (err) {
     console.warn("Terr ", err);
     return false;
@@ -50,43 +54,53 @@ var router = express.Router();
  */
 
 const verifyToken = async (req, res, next) => {
-   
   if (req.header("authorization")) {
     try {
       let token = req.header("authorization").trim().split(" ")[1];
       let tokenVal = "";
-      //Set token property because it need in every response to handle the frontend session      
-      console.log(process.env.JWT_ACCESS_SECRET,'=== access')       
+      console.log(token, "==== token ==");
+      //Set token property because it need in every response to handle the frontend session
+      console.log(process.env.JWT_ACCESS_SECRET, "=== access");
       if ((tokenVal = jwt.verify(token, process.env.JWT_ACCESS_SECRET))) {
-        res.set('token', token);
+        res.set("token", token);
         console.warn("Token Verified ", tokenVal);
         next();
       }
     } catch (error) {
-      if (error.name === "TokenExpiredError") {        
-        let refeshToken =  await refreshToken(req,res)
-        console.log('checking refresh token = ',refeshToken)
+      if (error.name === "TokenExpiredError") {
+        let refeshToken = await refreshToken(req, res);
+        console.log("checking refresh token = ", refeshToken);
         if (refeshToken === false) {
           return res.status(401).json({
             status: "error",
             msgText: "Either token has been expired or invalid." + error,
           });
         } else {
-          next()
+          next();
         }
       } else {
+        console.log("==== token ess ==");
         return res.status(401).json({
           status: "error",
           msgText: "Either token has been expired or invalid." + error,
         });
       }
     }
+  } else {
+    return res.status(401).json({
+      status: "error",
+      msgText: "Either token has been expired or not assigned.",
+    });
   }
 };
 
-
-
+let addTokenInBody = (req, res, next) => {
+  console.log(res, "=-=-=-=-=-");
+  res.body = res.body + "modified";
+  next();
+};
 /* Define middleware to check the token */
+router.use(addTokenInBody);
 router.use(verifyToken);
 router.post("/user-details", detailsById);
 router.post("/create", createUser);

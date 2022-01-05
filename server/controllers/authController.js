@@ -24,26 +24,31 @@ const login = async (req, res) => {
       .select("+password")
       .then((data) => {
         if (verifyPassword(req.body.password, data.password)) {
-          let token = jwt.sign({ username: req.body.username }, process.env.JWT_ACCESS_SECRET, {
-            expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN),
-          });
+          let token = jwt.sign(
+            { username: req.body.username },
+            process.env.JWT_ACCESS_SECRET,
+            {
+              expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN),
+            }
+          );
           let refreshToken = jwt.sign(
             { username: req.body.username },
             process.env.JWT_REFRESH_SECRET,
             {
               expiresIn: Number(process.env.JWT_REFRESH_EXPIREIN),
             }
-          ); 
-          //Set cookies for token        
+          );
+          //Set cookies for token
           res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: Number(process.env.COOKIE_REFRESH),
           });
+
           return res.status(200).json({
             status: "success",
             msgText: lang.got_result,
             data,
-            token: token
+            token: token,
           });
         }
         return res

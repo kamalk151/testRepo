@@ -32,8 +32,9 @@ function Login() {
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
           userData: result.data,
+          token: "",
         });
-
+        console.log(result.headers, "======");
         alert("Successfully logged-in");
         navigate("/dashboard");
       })

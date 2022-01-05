@@ -13,7 +13,9 @@ function Dashboard() {
 
   function getUsers() {
     axios
-      .post("http://localhost:1000/user/user-list")
+      .post("http://localhost:1000/users/user-details", {
+        id: "61c9b6b6c1472e328d347378",
+      })
       .then((result) => {
         console.log(result.data);
       })

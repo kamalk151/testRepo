@@ -4,20 +4,26 @@ const {
   hashPassword,
   verifyPassword,
 } = require("./../libs/helper/commonFiles");
-/**
+/** https://stackoverflow.com/questions/60487871/express-middleware-to-configure-response
  * Find user details by user id
  * @param {*} req
  * @param {*} res
  * returns json object
  */
 const detailsById = async (req, res) => {
-  try {    
-    userModel.findById(req.body.id, (err, data) => {          
+  try {
+    console.log("asdf");
+    userModel.findById(req.body.id, (err, data) => {
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
-      }  
-      return res.status(200).json({ status: "success", msgText: lang.got_result, data, token:req.token });      
-    })
+      }
+      return res.status(200).json({
+        status: "success",
+        msgText: lang.got_result,
+        data,
+        token: req.token,
+      });
+    });
   } catch (err) {
     return res.status(500).json({ status: "error", msgText: err });
   }
@@ -50,7 +56,7 @@ const updateById = async (req, res) => {
         status: "success",
         msgText: lang.got_updated,
         data,
-        token:req.token        
+        token: req.token,
       });
     });
   } catch (err) {
