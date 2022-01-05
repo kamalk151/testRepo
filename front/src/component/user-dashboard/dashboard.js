@@ -13,7 +13,7 @@ function Dashboard() {
 
   function getUsers() {
     axios
-      .post("http://localhost:1000/auth/user-list")
+      .post("http://localhost:1000/user/user-list")
       .then((result) => {
         console.log(result.data);
       })

@@ -7,6 +7,7 @@ var {
   resetPassword,
 } = require("./../controllers/userController");
 var router = express.Router();
+
 /**
  * Veifying token for users controller
  * @param {*} req
@@ -14,50 +15,29 @@ var router = express.Router();
  * @param {*} next
  * @returns
  */
-const verifyToken = async (req, res, next) => {
-  console.log("====", req.cookies, "==");
-  if (req.header("authorization")) {
-    try {
-      let token = req.header("authorization").trim().split(" ")[1];
-      let tokenVal = "";
-      console.log(jwt.verify(token, "secret"));
-      if ((tokenVal = jwt.verify(token, "secret"))) {
-        console.warn("Token Verified ", tokenVal);
-        next();
-      } else {
-        console.log("===elss====");
+ const refreshToken = (req,res) => {
+  
+  try {
+    if (
+      Object.keys(req.cookies).length != 0 &&
+      req.cookies.refreshToken !== undefined
+    ) {
+      let refreshToken = req.cookies.refreshToken;
+      let tokenVal = "";      
+      if ((tokenVal = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET))) {
+        let token = jwt.sign({ username: tokenVal.username }, process.env.JWT_ACCESS_SECRET, {
+          expiresIn: 10 * 60, //#Number(process.env.JWT_ACCESS_EXPIREIN)
+        });        
+        res.set('token', token);
+        console.warn("Token Verified new", tokenVal);
+        return true;
       }
-    } catch (error) {
-      if (error.name === "TokenExpiredError") {
-        if (refreshToken(req) === false) {
-          return res.status(401).json({
-            status: "error",
-            msgText: "Either token has been expired or invalid." + error,
-          });
-        }
-      } else {
-        return res.status(401).json({
-          status: "error",
-          msgText: "Either token has been expired or invalid." + error,
-        });
-      }
-      //   console.log(error.response.status);
-      //   console.log(error.response.headers);
-      //   if (error.response) {
-      //     // Request made and server responded
-      //     alert(error.response.data.msgText);
-      //     console.log(error.response.data);
-      //     console.log(error.response.status);
-      //     console.log(error.response.headers);
-      //   } else if (error.request) {
-      //     // The request was made but no response was received
-      //     console.log(error.request);
-      //   } else {
-      //     // Something happened in setting up the request that triggered an Error
-      //     console.log("Error", error.message);
-      //   }
-      next();
     }
+    return false;
+  
+  } catch (err) {
+    console.warn("Terr ", err);
+    return false;
   }
 };
 
@@ -68,27 +48,43 @@ const verifyToken = async (req, res, next) => {
  * @param {*} next
  * @returns
  */
-const refreshToken = (req) => {
-  if (
-    Object.keys(req.cookies).length != 0 &&
-    req.cookies.refreshToken !== undefined
-  ) {
+
+const verifyToken = async (req, res, next) => {
+   
+  if (req.header("authorization")) {
     try {
-      let refreshToken = req.cookies.refreshToken;
+      let token = req.header("authorization").trim().split(" ")[1];
       let tokenVal = "";
-      if ((tokenVal = jwt.verify(refreshToken, "refreshSecret"))) {
-        let token = jwt.sign({ username: tokenVal.username }, "secret", {
-          expiresIn: 10 * 60,
-        });
-        req.token = token;
-        console.warn("Token Verified new", tokenVal);
-        return true;
+      //Set token property because it need in every response to handle the frontend session      
+      console.log(process.env.JWT_ACCESS_SECRET,'=== access')       
+      if ((tokenVal = jwt.verify(token, process.env.JWT_ACCESS_SECRET))) {
+        res.set('token', token);
+        console.warn("Token Verified ", tokenVal);
+        next();
       }
-    } catch (err) {
-      return false;
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {        
+        let refeshToken =  await refreshToken(req,res)
+        console.log('checking refresh token = ',refeshToken)
+        if (refeshToken === false) {
+          return res.status(401).json({
+            status: "error",
+            msgText: "Either token has been expired or invalid." + error,
+          });
+        } else {
+          next()
+        }
+      } else {
+        return res.status(401).json({
+          status: "error",
+          msgText: "Either token has been expired or invalid." + error,
+        });
+      }
     }
   }
 };
+
+
 
 /* Define middleware to check the token */
 router.use(verifyToken);

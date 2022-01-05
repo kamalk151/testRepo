@@ -6,7 +6,7 @@ import { AppContext } from "./context";
 import Navbar from "./component/layout/navbar";
 
 function App() {
-  let [users, setUsers] = useState({ loginStatus: false, userData: "" });
+  let [users, setUsers] = useState({ loginStatus: false, userData: "", token:false });
 
   const dispatchUserEvent = function (actionType, payload = {}) {
     switch (actionType) {

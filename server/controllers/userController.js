@@ -11,14 +11,12 @@ const {
  * returns json object
  */
 const detailsById = async (req, res) => {
-  try {
-    userModel.findById(req.body.id, (err, data) => {    
-      console.log(data)
-      console.log(userModel.checkModel)   
+  try {    
+    userModel.findById(req.body.id, (err, data) => {          
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
       }  
-      return res.status(200).json({ status: "success", msgText: lang.got_result, data });      
+      return res.status(200).json({ status: "success", msgText: lang.got_result, data, token:req.token });      
     })
   } catch (err) {
     return res.status(500).json({ status: "error", msgText: err });
@@ -50,8 +48,9 @@ const updateById = async (req, res) => {
       }
       return res.status(200).json({
         status: "success",
-        msgText: "Successfully got updated.",
+        msgText: lang.got_updated,
         data,
+        token:req.token        
       });
     });
   } catch (err) {
