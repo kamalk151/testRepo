@@ -13,9 +13,17 @@ const {
 const detailsById = async (req, res) => {
   try {
     console.log("asdf");
-    userModel.findById(req.body.id, (err, data) => {
+    userModel.findById(req.body.ids, (err, data) => {
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
+      }
+      if(!data) {
+        return res.status(200).json({
+          status: "success",
+          msgText: lang.not_found,
+          data,
+          token: req.token,
+        });
       }
       return res.status(200).json({
         status: "success",

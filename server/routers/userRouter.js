@@ -96,8 +96,6 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-/* Define middleware to check the token */
-router.use(verifyToken);
 //middleware to access response body object
 router.use(responseMiddleware.json(
   function transform(body, req, res) {
@@ -108,6 +106,8 @@ router.use(responseMiddleware.json(
   }
 ));
 
+/* Define middleware to check the token */
+router.use(verifyToken);
 router.post("/user-details", detailsById);
 router.post("/create", createUser);
 router.put("/update-by-id", updateById);
