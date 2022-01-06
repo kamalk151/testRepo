@@ -1,5 +1,6 @@
 var express = require("express");
 const jwt = require("jsonwebtoken");
+const responseMiddleware = require('express-mung')
 var {
   detailsById,
   createUser,
@@ -7,6 +8,7 @@ var {
   resetPassword,
 } = require("./../controllers/userController");
 var router = express.Router();
+
 
 /**
  * Veifying token for users controller
@@ -33,7 +35,7 @@ const refreshToken = (req, res) => {
             expiresIn: 10 * 60, //#Number(process.env.JWT_ACCESS_EXPIREIN)
           }
         );
-        res.set("token", token);
+        res.set("tokens", token);
         console.warn("Token Verified new", tokenVal);
         return true;
       }
@@ -62,7 +64,7 @@ const verifyToken = async (req, res, next) => {
       //Set token property because it need in every response to handle the frontend session
       console.log(process.env.JWT_ACCESS_SECRET, "=== access");
       if ((tokenVal = jwt.verify(token, process.env.JWT_ACCESS_SECRET))) {
-        res.set("token", token);
+        res.set("tokens", token);
         console.warn("Token Verified ", tokenVal);
         next();
       }
@@ -94,14 +96,18 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-let addTokenInBody = (req, res, next) => {
-  console.log(res, "=-=-=-=-=-");
-  res.body = res.body + "modified";
-  next();
-};
 /* Define middleware to check the token */
-router.use(addTokenInBody);
 router.use(verifyToken);
+//middleware to access response body object
+router.use(responseMiddleware.json(
+  function transform(body, req, res) {
+      // do something with body
+      body.token = ' i am token'
+      console.log(body,'=resonpns bnody')
+      return body;
+  }
+));
+
 router.post("/user-details", detailsById);
 router.post("/create", createUser);
 router.put("/update-by-id", updateById);

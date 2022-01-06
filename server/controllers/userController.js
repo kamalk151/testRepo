@@ -4,7 +4,7 @@ const {
   hashPassword,
   verifyPassword,
 } = require("./../libs/helper/commonFiles");
-/** https://stackoverflow.com/questions/60487871/express-middleware-to-configure-response
+/** 
  * Find user details by user id
  * @param {*} req
  * @param {*} res
