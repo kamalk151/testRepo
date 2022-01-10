@@ -7,6 +7,22 @@ const {
 } = require("./../libs/helper/commonFiles");
 
 /**
+ * Refresh token function
+ */
+ const setTokenCookies = (req, res, token, refreshToken) => {
+ 
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    maxAge: Number(process.env.JWT_REFRESH_EXPIREIN) * 1000,
+  });
+  //set access token
+  res.cookie("accessToken", token, {
+    httpOnly: true,
+    maxAge: Number(process.env.JWT_ACCESS_EXPIREIN) * 1000,
+  });  
+};
+
+/**
  * Find user details by user id
  * @param {*} req
  * @param {*} res
@@ -24,6 +40,7 @@ const login = async (req, res) => {
       .select("+password")
       .then((data) => {
         if (verifyPassword(req.body.password, data.password)) {
+          //access token
           let token = jwt.sign(
             { username: req.body.username },
             process.env.JWT_ACCESS_SECRET,
@@ -31,6 +48,7 @@ const login = async (req, res) => {
               expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN),
             }
           );
+          //refresh token
           let refreshToken = jwt.sign(
             { username: req.body.username },
             process.env.JWT_REFRESH_SECRET,
@@ -38,12 +56,10 @@ const login = async (req, res) => {
               expiresIn: Number(process.env.JWT_REFRESH_EXPIREIN),
             }
           );
+            
           //Set cookies for token
-          res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            maxAge: Number(process.env.COOKIE_REFRESH),
-          });
-
+          setTokenCookies(req, res, token, refreshToken)
+          
           return res.status(200).json({
             status: "success",
             msgText: lang.got_result,
@@ -85,7 +101,6 @@ const forgotPassword = async (req, res) => {
     .findOne({ username: req.body.username })
     .then((data) => {
       if (data) {
-        console.log(data);
         /*Encypt password */
         let salt = Number(process.env.SALT);
         let hash = hashPassword(req.body.password, salt);
@@ -163,16 +178,18 @@ const userList = async (req, res) => {
 };
 
 /**
- * Refresh token function
+ * Refresh token method for generate the access token
  */
-const refreshToken = (req, res) => {};
+const refreshToken = () => {
+  
+}
 
 const authRoutes = {
   login,
   forgotPassword,
   createUser,
   userList,
-  refreshToken,
+  refreshToken
 };
 
 module.exports = authRoutes;

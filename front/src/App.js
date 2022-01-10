@@ -20,6 +20,9 @@ function App() {
       case "logout":
         setUsers({ ...users, loginStatus: false, userData: "", token: false });
         return;
+      case "updateToken":
+        setUsers({ ...users, token: payload.token });
+        return;
       default:
         return;
     }
@@ -28,7 +31,7 @@ function App() {
   return (
     <AppContext.Provider value={{ dispatchUserEvent, users }}>
       <Router>
-        <Navbar />
+        <Navbar users={users} />
         <React.StrictMode>
           <MyRoutes />
         </React.StrictMode>

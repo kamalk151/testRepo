@@ -11,25 +11,24 @@ const {
  * returns json object
  */
 const detailsById = async (req, res) => {
+  console.log('not udefined',req.cookies)
   try {
     console.log("asdf");
-    userModel.findById(req.body.ids, (err, data) => {
+    userModel.findById(req.body.id, (err, data) => {
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
       }
       if(!data) {
-        return res.status(200).json({
+        return res.status(400).json({
           status: "success",
           msgText: lang.not_found,
-          data,
-          token: req.token,
+          data
         });
       }
       return res.status(200).json({
         status: "success",
         msgText: lang.got_result,
-        data,
-        token: req.token,
+        data
       });
     });
   } catch (err) {
@@ -173,4 +172,5 @@ const userRoutes = {
   updateById,
   createUser,
 };
+
 module.exports = userRoutes;

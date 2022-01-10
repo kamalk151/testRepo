@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Form, Button, Container } from "react-bootstrap";
-import axios from "axios";
+import axios from "./api/baseAxios";
 import { AppContext } from "./../context";
 import { Link, useNavigate } from "react-router-dom";
 /**
@@ -15,28 +15,27 @@ function Login() {
 
   let formHandler = async (e) => {
     e.preventDefault();
-
     if (!password || !username) {
       alert("All field is required");
       return false;
     }
     /* Submit request to api */
+    
     await axios
-      .post("http://localhost:1000/auth/login", {
+      .post("auth/login", {
         username: username,
-        password: password,
+        password: password      
       })
-      .then((result) => {
-        result.headers["authorization"] = `Bearer ${result.data.token}`;
-
+      .then(({ data }) => {
+        console.log(data,'kkkk=== ')
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
-          userData: result.data,
-          token: "",
+          userData: data,
+          token: data.token,
         });
-        console.log(result.headers, "======");
+        console.log(data, "======");
         alert("Successfully logged-in");
-        navigate("/dashboard");
+        navigate("/about");
       })
       .catch((error) => {
         if (error.response) {

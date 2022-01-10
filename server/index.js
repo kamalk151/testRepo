@@ -10,10 +10,10 @@ dotenv.config();
 const app = express();
 
 //Middleware
-app.use(cors());
+//if passing witCredential true from client side
+app.use(cors({credentials: true, origin: "http://localhost:3000"}));
 app.use(cookieParser());
 app.use(bodyParser({ urlEncoded: true }));
-//End middleware
 
 app.use("/", router);
 

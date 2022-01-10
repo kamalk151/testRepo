@@ -1,11 +1,9 @@
 import "./../../assets/login.css";
-import { AppContext } from "../../context";
 import { NavLink } from "react-router-dom";
-import { useContext } from "react";
 
-function Navbar() {
-  let contextApi = useContext(AppContext);
 
+function Navbar(props) {
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -20,7 +18,7 @@ function Navbar() {
             <NavLink to="/about">About </NavLink>
           </li>
 
-          {contextApi.users.loginStatus === false ? (
+          {props.users.loginStatus === false ? (
             <>
               <li className="inline pad-10">
                 <NavLink to="/login">Login </NavLink>

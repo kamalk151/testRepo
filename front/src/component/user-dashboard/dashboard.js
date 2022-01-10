@@ -1,29 +1,41 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-function Dashboard() {
-  let userList = useState([]);
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "./../api/baseAxios";
+import { AppContext } from "../../context";
 
-  const refreshToken = (req, res, next) => {
-    console.log(req, "=====");
-  };
+function Dashboard() {
+  let navigate = useNavigate();
+  let [userList, setUser] = useState({});
+  let contextApi = useContext(AppContext)
 
   useEffect(() => {
+ 
+    if(!contextApi.users.loginStatus) {
+      return navigate("/");
+    }
     getUsers();
-  }, []);
+    
+  }, [contextApi.users.token]);
 
-  function getUsers() {
-    axios
+  async function getUsers() {
+    await axios
       .post("http://localhost:1000/users/user-details", {
-        id: "61c9b6b6c1472e328d347378",
+        id: "61caaf94492a627eb5b8d6c9",
+      }, {
+        headers:{
+          'Content-Type': 'application/json; charset=utf-8',
+          'authorization': `Bearer ${contextApi.users.token}`
+        }
       })
-      .then((result) => {
-        console.log(result.data);
+      .then(({data}) => {        
+        setUser(data.data);
+        if(data.token !== undefined) {         
+          contextApi.dispatchUserEvent('updateToken', {token:data.token})
+        }        
       })
-      .catch((err) => {
-        console.log(err);
-
+      .catch((err) => {         
         if (err.response) {
-          console.log(err.response);
+          return navigate("/logout");
         }
       });
   }
@@ -31,6 +43,25 @@ function Dashboard() {
     <div className="App">
       <header className="App-header">
         <p className=""> Welcome to user Dashboard</p>
+        <fieldset>
+          <legend>User details</legend>
+          
+          {(Object.keys(userList).length > 0) ? (<>
+          <p className="">
+            <label>Name </label>
+            <span>  {userList.first_name } {userList.last_name }</span>
+          </p>
+          <p className="">
+            <label> Email </label>
+            <span> {userList.username }  </span>
+          </p>
+          <p className="">
+            <label>Phone </label>
+            <span> {userList.status }  </span>
+          </p>
+          </>) :
+          <p>Result not found. </p> }
+        </fieldset>
       </header>
     </div>
   );
