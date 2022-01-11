@@ -5,12 +5,10 @@ import "./assets/header.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
-  
+ReactDOM.render(  
     <React.Fragment>
       <App />
-    </React.Fragment>,
-  
+    </React.Fragment>,  
   document.getElementById("root")
 );
 

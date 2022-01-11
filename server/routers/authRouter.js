@@ -1,11 +1,6 @@
 var express = require("express");
-var {login,  forgotPassword, createUser, userList, refreshToken } = require("./../controllers/authController");
+var {login,  forgotPassword, createUser, userList } = require("./../controllers/authController");
 var router = express.Router();
-
-const refresToken = (req,res,next) => {
-    console.log(req,'=====')
-}
- 
 
 /**
  * Veifying token for users controller
@@ -13,22 +8,32 @@ const refresToken = (req,res,next) => {
  * @param {*} res 
  * @param {*} next 
  * @returns 
- */
- const verifyToken = (req,res,next) => {
-    if(req.header('authorization')) {
-        try{
-            let token =  req.header('authorization').trim().split(' ')[1];
-            let tokenVal = '';
-            if(tokenVal = jwt.verify(token,'secret')) {                
-                console.warn('Token Verified ', tokenVal);
-                next();           
-            }            
-        }catch(err){
-            return res.status(401).json({status:'error', msgText :'Either token has been expired or invalid.'})
+ */ 
+const refreshToken = (req,res) => {
+    console.log(req.cookies.refreshToken,'=====')
+    try{
+        let token =  req.cookies.refreshToken;
+        
+        if(token === undefined){
+            return res.status(401).json({
+                status: 'error',
+                msgText: 'Invalid User'
+            })
         }
+
+        let tokenVal = '';
+        if(tokenVal = jwt.verify(token, process.env.JWT_REFRESH_SECRET)) {                
+            console.warn('Token Verified REFRES', tokenVal);           
+            res.status(200).json({
+                status: 'success',
+                msgText: 'Valid User'
+            })
+        }
+        
+    }catch(err){
+        return res.status(401).json({status:'error', msgText :'Either token has been expired or invalid.'})
     }
 }
-
 
 router.post("/login", login);
 router.patch("/forgot-password", forgotPassword);

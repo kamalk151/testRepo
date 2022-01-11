@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from './component/api/baseAxios'
 import { BrowserRouter as Router } from "react-router-dom";
 import MyRoutes from "./routes";
 import { AppContext } from "./context";
@@ -11,6 +12,10 @@ function App() {
     userData: "",
     token: false,
   });
+
+  useMemo(() => {    
+    RefreshToken()
+  },[])
 
   const dispatchUserEvent = function (actionType, payload = {}) {
     switch (actionType) {
@@ -32,7 +37,7 @@ function App() {
     <AppContext.Provider value={{ dispatchUserEvent, users }}>
       <Router>
         <Navbar users={users} />
-        <React.StrictMode>
+        <React.StrictMode>          
           <MyRoutes />
         </React.StrictMode>
       </Router>
@@ -40,4 +45,17 @@ function App() {
   );
 }
 
+function RefreshToken () {
+  console.log('refreshj')
+   
+    axios.post('auth/refresh-token')
+    .then(res=>{
+      console.log(res)
+    }).catch(err=>{
+      console.warn(err);
+     // res('good')
+    })  
+   
+  return true
+}
 export default App;

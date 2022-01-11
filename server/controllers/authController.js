@@ -180,16 +180,11 @@ const userList = async (req, res) => {
 /**
  * Refresh token method for generate the access token
  */
-const refreshToken = () => {
-  
-}
-
 const authRoutes = {
   login,
   forgotPassword,
   createUser,
-  userList,
-  refreshToken
+  userList
 };
 
 module.exports = authRoutes;
