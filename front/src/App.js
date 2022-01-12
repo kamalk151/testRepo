@@ -1,61 +1,80 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from './component/api/baseAxios'
+import cookie from 'react-cookies'
 import { BrowserRouter as Router } from "react-router-dom";
 import MyRoutes from "./routes";
 import { AppContext } from "./context";
 import Navbar from "./component/layout/navbar";
 
-function App() {
-  let [users, setUsers] = useState({
-    loginStatus: false,
-    userData: "",
-    token: false,
-  });
+class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      loginStatus: cookie.load('loginStatus') !== undefined ? cookie.load('loginStatus') : false,
+      userData: '',
+      token: false
+    }
+    console.warn(cookie.load('loginStatus'));
+    this.dispatchUserEvent = this.dispatchUserEvent.bind(this)
 
-  useMemo(() => {    
-    RefreshToken()
-  },[])
+    if(!this.state.loginStatus) {
+      RefreshToken(this.dispatchUserEvent)
+      alert(cookie.load('loginStatus'))
+    } 
 
-  const dispatchUserEvent = function (actionType, payload = {}) {
+  } 
+
+  dispatchUserEvent = function (actionType, payload = {}) {
     switch (actionType) {
       case "login":
-        setUsers({ ...users, ...payload });
+        console.log(this.state,' stat ')
+        this.setState({...this.state, ...payload });
         return;
       case "logout":
-        setUsers({ ...users, loginStatus: false, userData: "", token: false });
+        this.setState({ ...this.state, loginStatus: false, userData: "", token: false });
         return;
       case "updateToken":
-        setUsers({ ...users, token: payload.token });
+        this.setState({ ...this.state, token: payload.token });
         return;
       default:
         return;
     }
   };
 
-  return (
-    <AppContext.Provider value={{ dispatchUserEvent, users }}>
-      <Router>
-        <Navbar users={users} />
-        <React.StrictMode>          
-          <MyRoutes />
-        </React.StrictMode>
-      </Router>
-    </AppContext.Provider>
-  );
+  
+
+  render() {
+     
+    return (
+      
+      <AppContext.Provider value={{ dispatchUserEvent: this.dispatchUserEvent, users: this.state }}>
+        <Router>
+          <Navbar users={this.state} />
+          <React.StrictMode>
+            <MyRoutes />
+          </React.StrictMode>
+        </Router>
+      </AppContext.Provider>
+    );
+  }
 }
 
-function RefreshToken () {
+function RefreshToken(dispatchUserEvent) {
   console.log('refreshj')
-   
-    axios.post('auth/refresh-token')
-    .then(res=>{
+
+  axios.post('auth/refresh-token')
+    .then(res => {
       console.log(res)
-    }).catch(err=>{
-      console.warn(err);
-     // res('good')
-    })  
-   
+      dispatchUserEvent("login", {
+        loginStatus: true,
+        userData: res.data,
+        token: res.data.token,
+      });
+    }).catch(err => {
+      console.warn(err)
+    })
+
   return true
 }
 export default App;

@@ -4,6 +4,7 @@ const lang = require("./../libs/lang/lang");
 const {
   hashPassword,
   verifyPassword,
+  setAccessToken
 } = require("./../libs/helper/commonFiles");
 
 /**
@@ -15,11 +16,8 @@ const {
     httpOnly: true,
     maxAge: Number(process.env.JWT_REFRESH_EXPIREIN) * 1000,
   });
-  //set access token
-  res.cookie("accessToken", token, {
-    httpOnly: true,
-    maxAge: Number(process.env.JWT_ACCESS_EXPIREIN) * 1000,
-  });  
+  //set Access token
+  setAccessToken(req, res, token)
 };
 
 /**

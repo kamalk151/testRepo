@@ -27,7 +27,7 @@ function Login() {
         password: password      
       })
       .then(({ data }) => {
-        console.log(data,'kkkk=== ')
+        console.log(contextApi,'kkkk=== ')
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
           userData: data,
