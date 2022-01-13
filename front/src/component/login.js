@@ -20,17 +20,16 @@ function Login() {
       return false;
     }
     /* Submit request to api */
-    
+
     await axios
       .post("auth/login", {
         username: username,
-        password: password      
+        password: password,
       })
       .then(({ data }) => {
-        console.log(contextApi,'kkkk=== ')
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
-          userData: data,
+          userData: data.data,
           token: data.token,
         });
         console.log(data, "======");
@@ -52,7 +51,6 @@ function Login() {
           console.log("Error", error.message);
         }
       });
-
     /* end Submit request to api */
   };
 

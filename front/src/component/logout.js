@@ -1,7 +1,8 @@
 import { useContext, useEffect } from "react";
-
+import axios from "./api/baseAxios";
 import { AppContext } from "../context";
 import { useNavigate } from "react-router-dom";
+
 /**
  *
  * @returns
@@ -9,11 +10,33 @@ import { useNavigate } from "react-router-dom";
 function Logout() {
   let contextApi = useContext(AppContext);
   let navigate = useNavigate();
-  useEffect(() => {
+  useEffect(async () => {
     console.log("logout");
+    logoutApi();
     contextApi.dispatchUserEvent("logout");
     navigate("/");
   }, []);
+
+  function logoutApi() {
+    axios
+      .post(
+        "auth/logout",
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${contextApi.users.token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, "err = == ");
+      })
+      .catch((err) => {
+        console.log(err, "err === ");
+      });
+
+    return true;
+  }
 
   return true;
 }

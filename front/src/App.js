@@ -1,7 +1,7 @@
 import React, { useState, useMemo, Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from './component/api/baseAxios'
-import cookie from 'react-cookies'
+import axios from "./component/api/baseAxios";
+import cookie from "react-cookies";
 import { BrowserRouter as Router } from "react-router-dom";
 import MyRoutes from "./routes";
 import { AppContext } from "./context";
@@ -9,30 +9,32 @@ import Navbar from "./component/layout/navbar";
 
 class App extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      loginStatus: cookie.load('loginStatus') !== undefined ? cookie.load('loginStatus') : false,
-      userData: '',
-      token: false
+      loginStatus: false,
+      userData: "",
+      token: false,
+    };
+    this.dispatchUserEvent = this.dispatchUserEvent.bind(this);
+
+    if (!this.state.loginStatus) {
+      RefreshToken(this.dispatchUserEvent);
     }
-    console.warn(cookie.load('loginStatus'));
-    this.dispatchUserEvent = this.dispatchUserEvent.bind(this)
-
-    if(!this.state.loginStatus) {
-      RefreshToken(this.dispatchUserEvent)
-      alert(cookie.load('loginStatus'))
-    } 
-
-  } 
+  }
 
   dispatchUserEvent = function (actionType, payload = {}) {
     switch (actionType) {
       case "login":
-        console.log(this.state,' stat ')
-        this.setState({...this.state, ...payload });
+        console.log(this.state, " stat ");
+        this.setState({ ...this.state, ...payload });
         return;
       case "logout":
-        this.setState({ ...this.state, loginStatus: false, userData: "", token: false });
+        this.setState({
+          ...this.state,
+          loginStatus: false,
+          userData: "",
+          token: false,
+        });
         return;
       case "updateToken":
         this.setState({ ...this.state, token: payload.token });
@@ -42,13 +44,11 @@ class App extends Component {
     }
   };
 
-  
-
   render() {
-     
     return (
-      
-      <AppContext.Provider value={{ dispatchUserEvent: this.dispatchUserEvent, users: this.state }}>
+      <AppContext.Provider
+        value={{ dispatchUserEvent: this.dispatchUserEvent, users: this.state }}
+      >
         <Router>
           <Navbar users={this.state} />
           <React.StrictMode>
@@ -61,20 +61,20 @@ class App extends Component {
 }
 
 function RefreshToken(dispatchUserEvent) {
-  console.log('refreshj')
-
-  axios.post('auth/refresh-token')
-    .then(res => {
-      console.log(res)
+  console.log("onload refresh token");
+  axios
+    .post("auth/refresh-token")
+    .then((res) => {
       dispatchUserEvent("login", {
         loginStatus: true,
-        userData: res.data,
+        userData: res.data.data,
         token: res.data.token,
       });
-    }).catch(err => {
-      console.warn(err)
     })
+    .catch((err) => {
+      console.warn(err);
+    });
 
-  return true
+  return true;
 }
 export default App;

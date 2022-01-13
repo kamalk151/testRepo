@@ -1,7 +1,7 @@
 var express = require("express");
 const jwt = require("jsonwebtoken");
-const responseMiddleware = require('express-mung')
-const { refreshToken } = require("./../libs/helper/commonFiles"); 
+const responseMiddleware = require("express-mung");
+const { refreshToken } = require("./../libs/helper/commonFiles");
 var {
   detailsById,
   createUser,
@@ -10,7 +10,6 @@ var {
 } = require("./../controllers/userController");
 var router = express.Router();
 
-
 /**
  * Veifying token for users controller
  * @param {*} req
@@ -19,21 +18,12 @@ var router = express.Router();
  * @returns
  */
 
-
-/**
- * Veifying token for users controller
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @returns
- */
-
-const verifyToken = async (req, res, next) => {  
+const verifyToken = async (req, res, next) => {
   if (req.header("authorization")) {
     try {
       let token = req.header("authorization").trim().split(" ")[1];
-      let tokenVal = "";      
-      //Set token property because it need in every response to handle the frontend session      
+      let tokenVal = "";
+      //Set token property because it need in every response to handle the frontend session
       if ((tokenVal = jwt.verify(token, process.env.JWT_ACCESS_SECRET))) {
         console.warn("Token Verified ", tokenVal);
         next();
@@ -41,47 +31,48 @@ const verifyToken = async (req, res, next) => {
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         /*Calling refresh token for update the token */
-        let refeshToken = refreshToken(req, res);        
+        let refeshToken = refreshToken(req, res);
         if (refeshToken === false) {
           //401 unautohrized response (request has not been completed)
           return res.status(401).json({
             status: "error",
-            msgText: "Either token has been expired or invalid." + error,
+            msgText: "Either token has been a  expired or invalid." + error,
           });
         } else {
           next();
         }
       } else {
-        console.log("==== token ess ==");
         //401 unautohrized response (request has not been completed)
         return res.status(401).json({
           status: "error",
-          msgText: "Either token has been expired or invalid." + error,
+          msgText: "Either token has been s  expired or invalid." + error,
         });
       }
     }
   } else {
     return res.status(401).json({
       status: "error",
-      msgText: "Either token has been expired or not assigned.",
+      msgText: "Either token has been c expired or not assigned.",
     });
   }
 };
 
- 
 /* Define middleware to check the token */
 router.use(verifyToken);
 
 //middleware to modify response body object
-router.use(responseMiddleware.json(
-  function transform(body, req, res) {
+router.use(
+  responseMiddleware.json(function transform(body, req, res) {
     // do something with body
-    if(req.cookies.refreshToken !== undefined && req.cookies.refreshToken !== null) {
-      body.token = req.cookies.accessToken
-    }    
+    if (
+      req.cookies.refreshToken !== undefined &&
+      req.cookies.refreshToken !== null
+    ) {
+      body.token = req.cookies.accessToken;
+    }
     return body;
-  }
-));
+  })
+);
 
 router.post("/user-details", detailsById);
 router.post("/create", createUser);

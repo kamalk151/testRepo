@@ -4,31 +4,29 @@ const {
   hashPassword,
   verifyPassword,
 } = require("./../libs/helper/commonFiles");
-/** 
+/**
  * Find user details by user id
  * @param {*} req
  * @param {*} res
  * returns json object
  */
 const detailsById = async (req, res) => {
-  console.log('not udefined',req.cookies)
   try {
-    console.log("asdf");
     userModel.findById(req.body.id, (err, data) => {
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
       }
-      if(!data) {
-        return res.status(400).json({
+      if (!data) {
+        return res.status(200).json({
           status: "success",
           msgText: lang.not_found,
-          data
+          data,
         });
       }
       return res.status(200).json({
         status: "success",
         msgText: lang.got_result,
-        data
+        data,
       });
     });
   } catch (err) {

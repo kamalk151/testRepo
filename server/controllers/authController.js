@@ -4,20 +4,39 @@ const lang = require("./../libs/lang/lang");
 const {
   hashPassword,
   verifyPassword,
-  setAccessToken
 } = require("./../libs/helper/commonFiles");
 
 /**
  * Refresh token function
  */
- const setTokenCookies = (req, res, token, refreshToken) => {
- 
+const setTokenCookies = (req, res, data) => {
+  //access token
+  let token = jwt.sign(
+    { username: req.body.username, _id: data.id },
+    process.env.JWT_ACCESS_SECRET,
+    {
+      expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN),
+    }
+  );
+  //refresh token
+  let refreshToken = jwt.sign(
+    { username: req.body.username, _id: data.id },
+    process.env.JWT_REFRESH_SECRET,
+    {
+      expiresIn: Number(process.env.JWT_REFRESH_EXPIREIN),
+    }
+  );
+
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     maxAge: Number(process.env.JWT_REFRESH_EXPIREIN) * 1000,
   });
-  //set Access token
-  setAccessToken(req, res, token)
+  //set access token
+  res.cookie("accessToken", token, {
+    httpOnly: true,
+    maxAge: Number(process.env.JWT_ACCESS_EXPIREIN) * 1000,
+  });
+  return token;
 };
 
 /**
@@ -36,32 +55,15 @@ const login = async (req, res) => {
     userModel
       .findOne({ username: req.body.username })
       .select("+password")
-      .then((data) => {
-        if (verifyPassword(req.body.password, data.password)) {
-          //access token
-          let token = jwt.sign(
-            { username: req.body.username },
-            process.env.JWT_ACCESS_SECRET,
-            {
-              expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN),
-            }
-          );
-          //refresh token
-          let refreshToken = jwt.sign(
-            { username: req.body.username },
-            process.env.JWT_REFRESH_SECRET,
-            {
-              expiresIn: Number(process.env.JWT_REFRESH_EXPIREIN),
-            }
-          );
-            
+      .then((result) => {
+        console.log(result, "========= ");
+        if (verifyPassword(req.body.password, result.password)) {
           //Set cookies for token
-          setTokenCookies(req, res, token, refreshToken)
-          
+          let token = setTokenCookies(req, res, result);
           return res.status(200).json({
             status: "success",
             msgText: lang.got_result,
-            data,
+            data: result,
             token: token,
           });
         }
@@ -136,6 +138,8 @@ const createUser = async (req, res) => {
     data.first_name = req.body.first_name;
     data.last_name = req.body.last_name;
     data.username = req.body.username;
+    data.phone = req.body.phone;
+    data.gender = req.body.gender;
     data.password = hash;
 
     data.save(function (err) {
@@ -182,7 +186,7 @@ const authRoutes = {
   login,
   forgotPassword,
   createUser,
-  userList
+  userList,
 };
 
 module.exports = authRoutes;

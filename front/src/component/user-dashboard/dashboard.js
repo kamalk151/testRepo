@@ -6,34 +6,38 @@ import { AppContext } from "../../context";
 function Dashboard() {
   let navigate = useNavigate();
   let [userList, setUser] = useState({});
-  let contextApi = useContext(AppContext)
+  let contextApi = useContext(AppContext);
 
   useEffect(() => {
- 
-    if(!contextApi.users.loginStatus) {
+    if (!contextApi.users.loginStatus) {
       return navigate("/");
     }
     getUsers();
-    
   }, [contextApi.users.token]);
 
   async function getUsers() {
+    console.log(contextApi.users.userData);
     await axios
-      .post("http://localhost:1000/users/user-details", {
-        id: "61caaf94492a627eb5b8d6c9",
-      }, {
-        headers:{
-          'Content-Type': 'application/json; charset=utf-8',
-          'authorization': `Bearer ${contextApi.users.token}`
+      .post(
+        "http://localhost:1000/users/user-details",
+        {
+          id: contextApi.users.userData._id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            authorization: `Bearer ${contextApi.users.token}`,
+          },
+        }
+      )
+      .then(({ data }) => {
+        //console.log(data, "fronted");
+        setUser(data.data);
+        if (data.token !== undefined) {
+          contextApi.dispatchUserEvent("updateToken", { token: data.token });
         }
       })
-      .then(({data}) => {        
-        setUser(data.data);
-        if(data.token !== undefined) {         
-          contextApi.dispatchUserEvent('updateToken', {token:data.token})
-        }        
-      })
-      .catch((err) => {         
+      .catch((err) => {
         if (err.response) {
           return navigate("/logout");
         }
@@ -45,22 +49,28 @@ function Dashboard() {
         <p className=""> Welcome to user Dashboard</p>
         <fieldset>
           <legend>User details</legend>
-          
-          {(Object.keys(userList).length > 0) ? (<>
-          <p className="">
-            <label>Name </label>
-            <span>  {userList.first_name } {userList.last_name }</span>
-          </p>
-          <p className="">
-            <label> Email </label>
-            <span> {userList.username }  </span>
-          </p>
-          <p className="">
-            <label>Phone </label>
-            <span> {userList.status }  </span>
-          </p>
-          </>) :
-          <p>Result not found. </p> }
+
+          {Object.keys(userList).length > 0 ? (
+            <>
+              <p className="">
+                <label>Name </label>
+                <span>
+                  {" "}
+                  {userList.first_name} {userList.last_name}
+                </span>
+              </p>
+              <p className="">
+                <label> Email </label>
+                <span> {userList.username} </span>
+              </p>
+              <p className="">
+                <label>Phone </label>
+                <span> {userList.phone} </span>
+              </p>
+            </>
+          ) : (
+            <p>Result not found. </p>
+          )}
         </fieldset>
       </header>
     </div>
