@@ -1,5 +1,6 @@
 const userModel = require("./../models/userModel");
-const addressModel = require('./../models/userAddressModel')
+const addressModel = require("./../models/userAddressModel");
+const roleModel = require("./../models/roleModel");
 const jwt = require("jsonwebtoken");
 const lang = require("./../libs/lang/lang");
 const {
@@ -41,6 +42,36 @@ const setTokenCookies = (req, res, data) => {
 };
 
 /**
+ * Create method to store user information
+ * @param {*} req
+ * @param {*} res
+ */
+const userRole = async () => {
+  try {
+    let role = await roleModel.findOne({ role: "user" });
+    console.log(role, "== role   = ");
+    return role._id;
+  } catch (err) {
+    throw err;
+  }
+};
+
+/**
+ * Create method to store user information
+ * @param {*} req
+ * @param {*} res
+ */
+const fetchUser = async (reqObj) => {
+  try {
+    let userData = await userModel.findOne(reqObj);
+    console.log(userData, "== role   = ");
+    return userData;
+  } catch (err) {
+    throw err;
+  }
+};
+
+/**
  * Find user details by user id
  * @param {*} req
  * @param {*} res
@@ -56,7 +87,7 @@ const login = async (req, res) => {
     userModel
       .findOne({ username: req.body.username })
       .select("+password")
-      .populate('roles')
+      .populate("role")
       .then((result) => {
         console.log(result, "========= ");
         if (verifyPassword(req.body.password, result.password)) {
@@ -135,28 +166,29 @@ const createUser = async (req, res) => {
     /*Encypt password */
     let salt = Number(process.env.SALT);
     let hash = hashPassword(req.body.password, salt);
-    userModel.findOne({ username: req.body.username });
 
-    let data = new userModel();
+    let role_id = await userRole();
+
+    let data = await new userModel();
     data.first_name = req.body.first_name;
     data.last_name = req.body.last_name;
-    data.username = req.body.username;    
+    data.username = req.body.username;
     data.phone = req.body.phone;
     data.gender = req.body.gender;
+    data.role = role_id;
     data.password = hash;
 
     data.save(function (err, result) {
-            
       if (err) {
         return res.status(500).json(err);
       } else {
         let address = new addressModel();
         address.user_id = result._id;
-        address.addressTitle = 'Home';
-        address.addressOne = 'Mayur Vihar Dasna';
-        address.addressTwo = 'Dasna, Adhyatmik Nagar';
-        address.city = 'Ghaziabad'
-        address.state = 'UP'        
+        address.addressTitle = "Home";
+        address.addressOne = "Mayur Vihar Dasna";
+        address.addressTwo = "Dasna, Adhyatmik Nagar";
+        address.city = "Ghaziabad";
+        address.state = "UP";
         address.save();
       }
       return res.status(200).json({

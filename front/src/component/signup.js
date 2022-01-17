@@ -15,7 +15,7 @@ class Signup extends Component {
       password: "",
       phone: "",
       checkbox: "1",
-      gender: "",
+      gender: "Female",
     };
   }
 
