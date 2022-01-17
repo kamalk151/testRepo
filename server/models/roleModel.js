@@ -3,8 +3,8 @@ const userRole = new Mongoose.Schema({
   label: { type: String, required: true, trim: true },
   role: { type: String, required: true, trim: true },
   status: { type: Number, default: 1 },
-  created_at: Date,
-  updated_at: Date,
+  created_at: {type: Date, default: Date.now() },
+  updated_at: {type: Date, default: Date.now() }
 });
 
 userRole.method.checkModel = () => {

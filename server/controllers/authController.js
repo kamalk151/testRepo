@@ -1,4 +1,5 @@
 const userModel = require("./../models/userModel");
+const addressModel = require('./../models/userAddressModel')
 const jwt = require("jsonwebtoken");
 const lang = require("./../libs/lang/lang");
 const {
@@ -55,6 +56,7 @@ const login = async (req, res) => {
     userModel
       .findOne({ username: req.body.username })
       .select("+password")
+      .populate('roles')
       .then((result) => {
         console.log(result, "========= ");
         if (verifyPassword(req.body.password, result.password)) {
@@ -134,19 +136,29 @@ const createUser = async (req, res) => {
     let salt = Number(process.env.SALT);
     let hash = hashPassword(req.body.password, salt);
     userModel.findOne({ username: req.body.username });
+
     let data = new userModel();
     data.first_name = req.body.first_name;
     data.last_name = req.body.last_name;
-    data.username = req.body.username;
+    data.username = req.body.username;    
     data.phone = req.body.phone;
     data.gender = req.body.gender;
     data.password = hash;
 
-    data.save(function (err) {
+    data.save(function (err, result) {
+            
       if (err) {
         return res.status(500).json(err);
+      } else {
+        let address = new addressModel();
+        address.user_id = result._id;
+        address.addressTitle = 'Home';
+        address.addressOne = 'Mayur Vihar Dasna';
+        address.addressTwo = 'Dasna, Adhyatmik Nagar';
+        address.city = 'Ghaziabad'
+        address.state = 'UP'        
+        address.save();
       }
-
       return res.status(200).json({
         status: "success",
         msgText: "Successfully saved result",

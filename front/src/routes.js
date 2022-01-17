@@ -1,4 +1,6 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import {AppContext} from './context'
 import About from "./component/about";
 import Home from "./component/index";
 import Login from "./component/login";
@@ -9,6 +11,8 @@ import Dashboard from "./component/user-dashboard/dashboard";
 import AdminDashboard from "./component/admin-dashboard/dashboard";
 import Logout from "./component/logout";
 
+
+/* App Route Component */
 function MyRoutes() {
   return (
     <Routes>
@@ -17,12 +21,34 @@ function MyRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/forget" element={<Forget />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/forget" element={<Forget />} />      
       <Route path="/logout" element={<Logout />} />
+
+      <Route path="/admin-dashboard" element={
+        <RequireAuth redirectTo="/login">
+          <AdminDashboard />
+        </RequireAuth>
+      } />
+      <Route path="/dashboard" element={
+        <RequireAuth redirectTo="/login">
+          <Dashboard />
+        </RequireAuth>
+      } />
     </Routes>
   );
+}
+
+/**
+ * Component to authenticate route
+ * @param {children} 
+ * @param {redirectTo                                                                                                                                   } 
+ * @returns 
+ */
+function RequireAuth({ children, redirectTo }) {
+  const {users} = useContext(AppContext)
+  console.log(users.loginStatus, 'require path')
+  let isAuthenticated = users.loginStatus
+  return isAuthenticated ? children : <Navigate to={redirectTo} />
 }
 
 export default MyRoutes;

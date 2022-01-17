@@ -6,10 +6,11 @@ const userSchema = new Mongoose.Schema({
   password: { type: String, required: true, trim: true, select: false },
   phone: { type: String, required: true, trim: true },
   gender: { type: String, required: true },
+  role_id: {type: Number, default: 1},
   profile_img: String,
   status: { type: Number, default: 1 },
-  created_at: Date,
-  updated_at: Date,
+  created_at: {type:Date, default:Date.now()},
+  updated_at: {type:Date, default:Date.now()}
 });
 
 userSchema.method.checkModel = () => {

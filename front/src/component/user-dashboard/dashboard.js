@@ -8,10 +8,7 @@ function Dashboard() {
   let [userList, setUser] = useState({});
   let contextApi = useContext(AppContext);
 
-  useEffect(() => {
-    if (!contextApi.users.loginStatus) {
-      return navigate("/");
-    }
+  useEffect(() => {    
     getUsers();
   }, [contextApi.users.token]);
 
