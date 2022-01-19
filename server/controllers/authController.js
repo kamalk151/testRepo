@@ -84,12 +84,18 @@ const login = async (req, res) => {
         .status(401)
         .json({ status: "error", msgText: "Invalid Request" });
     }
+
     userModel
       .findOne({ username: req.body.username })
       .select("+password")
-      .populate("role")
+      .populate("role", "role")
       .then((result) => {
-        console.log(result, "========= ");
+        if (result === null) {
+          return res
+            .status(404)
+            .json({ status: "success", msgText: "User " + lang.not_found });
+        }
+
         if (verifyPassword(req.body.password, result.password)) {
           //Set cookies for token
           let token = setTokenCookies(req, res, result);
@@ -166,7 +172,14 @@ const createUser = async (req, res) => {
     /*Encypt password */
     let salt = Number(process.env.SALT);
     let hash = hashPassword(req.body.password, salt);
+    let userExist = await fetchUser({ username: req.body.username });
 
+    if (Object.keys(userExist.toObject()).length !== 0) {
+      return res.status(409).json({
+        status: "error",
+        msgText: ` ${lang.user} ${lang.already_exist}`,
+      });
+    }
     let role_id = await userRole();
 
     let data = await new userModel();

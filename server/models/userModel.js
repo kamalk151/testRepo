@@ -9,7 +9,6 @@ const userSchema = new Mongoose.Schema(
     phone: { type: String, required: true, trim: true },
     role: { type: Mongoose.Schema.Types.ObjectId, ref: "roles" },
     gender: { type: String, required: true },
-
     profile_img: String,
     status: { type: Number, default: 1 },
   },
