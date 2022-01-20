@@ -24,12 +24,12 @@ function MyRoutes() {
       <Route path="/forget" element={<Forget />} />      
       <Route path="/logout" element={<Logout />} />
 
-      <Route path="/admin-dashboard" element={
+      <Route path="/admin/dashboard" element={
         <RequireAuth redirectTo="/login">
           <AdminDashboard />
         </RequireAuth>
       } />
-      <Route path="/dashboard" element={
+      <Route path="/user/dashboard" element={
         <RequireAuth redirectTo="/login">
           <Dashboard />
         </RequireAuth>

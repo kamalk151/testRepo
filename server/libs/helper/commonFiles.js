@@ -36,13 +36,14 @@ let commonFiles = {
           (tokenVal = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET))
         ) {
           let token = jwt.sign(
-            { username: tokenVal.username, _id: tokenVal._id },
+            { username: tokenVal.username, _id: tokenVal._id, role:tokenVal.role },
             process.env.JWT_ACCESS_SECRET,
             {
               expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN), //#Number(process.env.JWT_ACCESS_EXPIREIN)
             }
           );
           req.tid = tokenVal._id;
+          req.role = tokenVal.role;
           //set access token
           res.cookie("accessToken", token, {
             httpOnly: true,

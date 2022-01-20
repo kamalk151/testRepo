@@ -30,10 +30,10 @@ function Navbar(props) {
           ) : (
             <>
               <li className="inline pad-10">
-                <NavLink to="/dashboard">Dashboard </NavLink>
+                <NavLink to="/user/dashboard">Dashboard </NavLink>
               </li>
               <li className="inline pad-10">
-                <NavLink to="/admin-dashboard">Admin Dashboard </NavLink>
+                <NavLink to="/admin/dashboard">Admin Dashboard </NavLink>
               </li>
               <li className="inline pad-10">
                 <NavLink to="/logout">Logout </NavLink>

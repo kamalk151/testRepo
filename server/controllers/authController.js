@@ -14,7 +14,7 @@ const {
 const setTokenCookies = (req, res, data) => {
   //access token
   let token = jwt.sign(
-    { username: req.body.username, _id: data.id },
+    { username: req.body.username, _id: data.id, role: data.role.role },
     process.env.JWT_ACCESS_SECRET,
     {
       expiresIn: Number(process.env.JWT_ACCESS_EXPIREIN),
@@ -22,7 +22,7 @@ const setTokenCookies = (req, res, data) => {
   );
   //refresh token
   let refreshToken = jwt.sign(
-    { username: req.body.username, _id: data.id },
+    { username: req.body.username, _id: data.id, role: data.role.role },
     process.env.JWT_REFRESH_SECRET,
     {
       expiresIn: Number(process.env.JWT_REFRESH_EXPIREIN),
@@ -99,6 +99,7 @@ const login = async (req, res) => {
         if (verifyPassword(req.body.password, result.password)) {
           //Set cookies for token
           let token = setTokenCookies(req, res, result);
+          console.log(result)
           return res.status(200).json({
             status: "success",
             msgText: lang.got_result,
@@ -173,11 +174,11 @@ const createUser = async (req, res) => {
     let salt = Number(process.env.SALT);
     let hash = hashPassword(req.body.password, salt);
     let userExist = await fetchUser({ username: req.body.username });
-
-    if (Object.keys(userExist.toObject()).length !== 0) {
+    console.log(userExist)
+    if (userExist !==null  && Object.keys(userExist.toObject()).length !== 0) {
       return res.status(409).json({
-        status: "error",
-        msgText: ` ${lang.user} ${lang.already_exist}`,
+        status: "error", 
+        msgText: ` ${lang.user}${lang.already_exist}`,
       });
     }
     let role_id = await userRole();
@@ -211,7 +212,7 @@ const createUser = async (req, res) => {
       });
     });
   } catch (err) {
-    return res.status(500).json({ status: "error", msgText: err });
+    return res.status(500).json({ status: "errors", msgText: err.toString() });
   }
 };
 

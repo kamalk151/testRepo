@@ -23,6 +23,7 @@ const refreshTokenFun = (req, res) => {
       status: "success",
       msgText: "Valid User",
       token: req.cookies.accessToken,
+      role: req.role,
       data: { _id: req.tid },
     });
   } else {

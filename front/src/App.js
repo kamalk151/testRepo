@@ -14,6 +14,7 @@ class App extends Component {
       loginStatus: false,
       userData: "",
       token: false,
+      role: false,
     };
     this.dispatchUserEvent = this.dispatchUserEvent.bind(this);
 
@@ -34,6 +35,7 @@ class App extends Component {
           loginStatus: false,
           userData: "",
           token: false,
+          role: false
         });
         return;
       case "updateToken":
@@ -69,6 +71,7 @@ function RefreshToken(dispatchUserEvent) {
         loginStatus: true,
         userData: res.data.data,
         token: res.data.token,
+        role: res.role,
       });
     })
     .catch((err) => {

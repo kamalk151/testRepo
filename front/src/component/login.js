@@ -26,13 +26,15 @@ function Login() {
         username: username,
         password: password,
       })
-      .then(({ data }) => {
+      .then(( {data} ) => {
+        console.log(data, "======");
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
           userData: data.data,
           token: data.token,
+          role: data.data.role.role
         });
-        console.log(data, "======");
+        
         alert("Successfully logged-in");
         navigate("/about");
       })
