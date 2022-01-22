@@ -99,7 +99,7 @@ const login = async (req, res) => {
         if (verifyPassword(req.body.password, result.password)) {
           //Set cookies for token
           let token = setTokenCookies(req, res, result);
-          console.log(result)
+          console.log(result);
           return res.status(200).json({
             status: "success",
             msgText: lang.got_result,
@@ -174,10 +174,10 @@ const createUser = async (req, res) => {
     let salt = Number(process.env.SALT);
     let hash = hashPassword(req.body.password, salt);
     let userExist = await fetchUser({ username: req.body.username });
-    console.log(userExist)
-    if (userExist !==null  && Object.keys(userExist.toObject()).length !== 0) {
+    console.log(userExist);
+    if (userExist !== null && Object.keys(userExist.toObject()).length !== 0) {
       return res.status(409).json({
-        status: "error", 
+        status: "error",
         msgText: ` ${lang.user}${lang.already_exist}`,
       });
     }

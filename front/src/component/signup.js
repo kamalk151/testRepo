@@ -25,6 +25,14 @@ class Signup extends Component {
     });
   };
 
+  validateAllField = (form_data) => {
+    console.log(form_data, "=form_data");
+
+    return Object.keys(form_data).every((key) => {
+      return form_data[key].trim() !== "";
+    });
+  };
+
   formSubmit = (e) => {
     e.preventDefault();
 
@@ -36,6 +44,13 @@ class Signup extends Component {
       phone: this.state.phone,
       gender: this.state.gender,
     };
+
+    let errorVal = this.validateAllField(form_data);
+    if (errorVal === false) {
+      alert("Please fill required field.");
+      return false;
+    }
+
     axios
       .post("auth/create", form_data, {
         headers: {
@@ -69,93 +84,112 @@ class Signup extends Component {
   render() {
     return (
       <Container>
-        <div className="col-md-8">
-          <h2 className=""> SingUp with us to see more feature. </h2>
-          <hr />
-          <form action="/" method="post" onSubmit={this.formSubmit}>
-            <Form.Group className="mb-3" controlId="firstName">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter first name"
-                name="first_name"
-                value={this.state.first_name}
-                onChange={(e) => this.inputHandler(e)}
-              />
-            </Form.Group>
+        <div className="signup_screen">
+          <div className="signup_screen__content">
+            <h4 className="mt-3"> SingUp with us to see more feature. </h4>
+            <hr />
+            <form
+              action="/"
+              method="post"
+              onSubmit={this.formSubmit}
+              className="signup"
+            >
+              <Form.Group className="mb-3 signup__field" controlId="firstName">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter first name*"
+                  name="first_name"
+                  value={this.state.first_name}
+                  className="signup__input"
+                  onChange={(e) => this.inputHandler(e)}
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="last_name">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter last name"
-                name="last_name"
-                value={this.state.last_name}
-                onChange={(e) => this.inputHandler(e)}
-              />
-            </Form.Group>
+              <Form.Group className="mb-3 signup__field" controlId="last_name">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter last name*"
+                  name="last_name"
+                  className="signup__input"
+                  value={this.state.last_name}
+                  onChange={(e) => this.inputHandler(e)}
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="email">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="text"
-                name="username"
-                placeholder="Enter email"
-                value={this.state.username}
-                onChange={(e) => this.inputHandler(e)}
-              />
-            </Form.Group>
+              <Form.Group className="mb-3 signup__field" controlId="email">
+                <Form.Control
+                  type="text"
+                  name="username"
+                  placeholder="Enter email*"
+                  value={this.state.username}
+                  className="signup__input"
+                  onChange={(e) => this.inputHandler(e)}
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter Password"
-                value={this.state.password}
-                name="password"
-                onChange={(e) => this.inputHandler(e)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Phone</Form.Label>
-              <Form.Control
-                type="text"
-                name="phone"
-                value={this.state.phone}
-                onChange={(e) => this.inputHandler(e)}
-                placeholder="Enter phone"
-              />
-            </Form.Group>
+              <Form.Group className="mb-3 signup__field" controlId="password">
+                <Form.Control
+                  type="password"
+                  placeholder="Enter Password*"
+                  value={this.state.password}
+                  name="password"
+                  className="signup__input"
+                  onChange={(e) => this.inputHandler(e)}
+                />
+              </Form.Group>
+              <Form.Group className="signup__field">
+                <Form.Control
+                  type="text"
+                  name="phone"
+                  className="signup__input"
+                  value={this.state.phone}
+                  onChange={(e) => this.inputHandler(e)}
+                  placeholder="Enter phone*"
+                />
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="gender">
-              <Form.Label className=""> Gender </Form.Label>
-              <Form.Check
-                type="radio"
-                label="Male"
-                value="Male"
-                name="gender"
-                onChange={(e) => this.inputHandler(e)}
-              />
-              <Form.Check
-                type="radio"
-                label="female"
-                name="gender"
-                value="Female"
-                checked
-                onChange={(e) => this.inputHandler(e)}
-              />
-            </Form.Group>
+              <Form.Group
+                className="mb-3 mr-5 signup__field"
+                controlId="gender"
+              >
+                <Form.Label className="mr-5 ml-5"> Gender </Form.Label>
+                <Form.Check
+                  type="radio"
+                  label="Male"
+                  value="Male"
+                  name="gender"
+                  className="ml-5 form-check-ext"
+                  onChange={(e) => this.inputHandler(e)}
+                />
+                <Form.Check
+                  type="radio"
+                  label="female"
+                  className="ml-5 form-check-ext"
+                  name="gender"
+                  value="Female"
+                  checked
+                  onChange={(e) => this.inputHandler(e)}
+                />
+              </Form.Group>
 
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </form>
-          <p className="text-center">
-            Existing users
-            <Link to="/login" className="">
-              SignIn
-            </Link>
-          </p>
+              <Button variant="" type="submit" className="signup__submit">
+                Submit
+              </Button>
+            </form>
+            <p className="text-center">
+              Existing users &nbsp;
+              <Link to="/login" className="">
+                Sign-In
+              </Link>
+            </p>
+          </div>
+
+          <div className="screen__background">
+            <span className="signup_screen__background__shape signup_screen__background__shape4"></span>
+            <span className="signup_screen__background__shape signup_screen__background__shape3"></span>
+            <span className="signup_screen__background__shape signup_screen__background__shape2"></span>
+            <span className="signup_screen__background__shape signup_screen__background__shape1"></span>
+          </div>
         </div>
       </Container>
     );

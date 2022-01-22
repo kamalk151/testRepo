@@ -26,15 +26,15 @@ function Login() {
         username: username,
         password: password,
       })
-      .then(( {data} ) => {
+      .then(({ data }) => {
         console.log(data, "======");
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
           userData: data.data,
           token: data.token,
-          role: data.data.role.role
+          role: data.data.role.role,
         });
-        
+
         alert("Successfully logged-in");
         navigate("/about");
       })
@@ -57,52 +57,73 @@ function Login() {
   };
 
   return (
-    <Container>
-      <div className="col-md-6">
-        <p className=""> Welcome to our site signup</p>
-        <Form action="/" method="post" onSubmit={formHandler}>
-          <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value.trim())}
-            />
-          </Form.Group>
+    <Container className="container">
+      <div className="screen">
+        <div className="screen__content">
+          <Form
+            action="/"
+            method="post"
+            onSubmit={formHandler}
+            className="login"
+          >
+            <Form.Group className="  login__field" controlId="email">
+              <i className="login__icon fas fa-user"></i>
 
-          <Form.Group className="mb-3" controlId="password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value.trim())}
-            />
-          </Form.Group>
+              <Form.Control
+                type="text"
+                className="login__input"
+                placeholder="Enter email*"
+                value={username}
+                onChange={(e) => setUsername(e.target.value.trim())}
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3" controlId="gender">
-            <Form.Check type="checkbox" label="Remember me" />
-          </Form.Group>
+            <Form.Group className="mb-3 login__field" controlId="password">
+              <Form.Control
+                type="password"
+                className="login__input"
+                placeholder="Enter Password*"
+                value={password}
+                onChange={(e) => setPassword(e.target.value.trim())}
+              />
+            </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
+            <Form.Group className="mb-3" controlId="gender">
+              <Form.Check type="checkbox" label="Remember me" />
+            </Form.Group>
 
-        <p className="mt-3 text-center">
-          Password don`t have remember
-          <Link to="/forget" className="">
-            Forget password
-          </Link>
-        </p>
+            <Button variant="" type="submit" className="button login__submit">
+              Submit
+            </Button>
+          </Form>
+          <p className="mt-3 text-center">
+            Password don`t have remember &nbsp;
+            <Link to="/forget" className="color-w">
+              Forget password
+            </Link>
+          </p>
 
-        <p className="text-center">
-          Don`t have account
-          <Link to="/signup" className="">
-            SignUp
-          </Link>
-        </p>
+          <p className="text-center">
+            Don`t have account&nbsp;
+            <Link to="/signup" className="color-w">
+              SignUp
+            </Link>
+          </p>
+          {/* <div className="social-login">
+            <h3>log in via</h3>
+            <div className="social-icons">
+              <a href="#" className="social-login__icon fab fa-instagram"></a>
+              <a href="#" className="social-login__icon fab fa-facebook"></a>
+              <a href="#" className="social-login__icon fab fa-twitter"></a>
+            </div>
+          </div> */}
+        </div>
+        <div className="screen__background">
+          <span className="screen__background__shape screen__background__shape4"></span>
+          <span className="screen__background__shape screen__background__shape3"></span>
+          <span className="screen__background__shape screen__background__shape2"></span>
+          <span className="screen__background__shape screen__background__shape1"></span>
+        </div>
       </div>
     </Container>
   );
