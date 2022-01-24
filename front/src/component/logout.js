@@ -14,7 +14,7 @@ function Logout() {
     console.log("logout");
     logoutApi();
     contextApi.dispatchUserEvent("logout");
-    navigate("/");
+    navigate("/login");
   }, []);
 
   function logoutApi() {

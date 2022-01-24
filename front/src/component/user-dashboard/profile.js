@@ -1,27 +1,13 @@
 import { useEffect, useState, useContext, Component } from "react";
 import { useNavigate } from "react-router-dom";
-import "./../../assets/user/css/font-face.css";
-import "../../assets/user/js/main.js";
-import "./../../assets/user/vendor/font-awesome-4.7/css/font-awesome.min.css";
-import "./../../assets/user/vendor/font-awesome-5/css/fontawesome-all.min.css";
-import "./../../assets/user/vendor/mdi-font/css/material-design-iconic-font.min.css";
-import "./../../assets/user/vendor/animsition/animsition.min.css";
-import "./../../assets/user/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css";
-import "./../../assets/user/vendor/wow/animate.css";
-import "./../../assets/user/vendor/css-hamburgers/hamburgers.min.css";
-import "./../../assets/user/vendor/select2/select2.min.css";
-import "./../../assets/user/vendor/perfect-scrollbar/perfect-scrollbar.css";
-import "./../../assets/user/css/theme.css";
-
 import axios from "../api/baseAxios";
-import Sidebar from "./layout/sidebar";
-import Header from "./layout/header";
 
 class Profile extends Component {
+  
   render() {
     return (
       <div className="row">
-        <div className="col-lg-9">
+        <div className="col-lg-11">
           <div className="table-responsive table--no-card m-b-30">
             <table className="table table-borderless table-striped table-earning">
               <thead>
@@ -103,50 +89,7 @@ class Profile extends Component {
             </table>
           </div>
         </div>
-        <div className="col-lg-3">
-          <div className="au-card au-card--bg-blue au-card-top-countries m-b-30">
-            <div className="au-card-inner">
-              <div className="table-responsive">
-                <table className="table table-top-countries">
-                  <tbody>
-                    <tr>
-                      <td>United States</td>
-                      <td className="text-right">$119,366.96</td>
-                    </tr>
-                    <tr>
-                      <td>Australia</td>
-                      <td className="text-right">$70,261.65</td>
-                    </tr>
-                    <tr>
-                      <td>United Kingdom</td>
-                      <td className="text-right">$46,399.22</td>
-                    </tr>
-                    <tr>
-                      <td>Turkey</td>
-                      <td className="text-right">$35,364.90</td>
-                    </tr>
-                    <tr>
-                      <td>Germany</td>
-                      <td className="text-right">$20,366.96</td>
-                    </tr>
-                    <tr>
-                      <td>France</td>
-                      <td className="text-right">$10,366.96</td>
-                    </tr>
-                    <tr>
-                      <td>Australia</td>
-                      <td className="text-right">$5,366.96</td>
-                    </tr>
-                    <tr>
-                      <td>Italy</td>
-                      <td className="text-right">$1639.32</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+         
       </div>
     );
   }

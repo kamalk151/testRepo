@@ -11,7 +11,7 @@ import Dashboard from "./component/user-dashboard/index";
 import ChatPage from "./component/user-dashboard/chat";
 import Setting from "./component/user-dashboard/setting";
 import Profile from "./component/user-dashboard/profile";
-import AdminDashboard from "./component/admin-dashboard/dashboard";
+import AdminDashboard from "./component/admin-dashboard/index";
 import Logout from "./component/logout";
 
 /* App Route Component */
@@ -27,7 +27,7 @@ function MyRoutes() {
       <Route path="/logout" element={<Logout />} />
 
       <Route
-        path="/admin/dashboard"
+        path="/admin/*"
         element={
           <RequireAuth redirectTo="/login">
             <AdminDashboard />
@@ -35,38 +35,13 @@ function MyRoutes() {
         }
       />
       <Route
-        path="/user/dashboard"
+        path="/user/*"
         element={
           <RequireAuth redirectTo="/login">
             <Dashboard />
           </RequireAuth>
         }
-      />
-
-      <Route
-        path="/user/chat"
-        element={
-          <RequireAuth redirectTo="/login">
-            <ChatPage />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/user/profile"
-        element={
-          <RequireAuth redirectTo="/login">
-            <Profile />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/user/setting"
-        element={
-          <RequireAuth redirectTo="/login">
-            <Setting />
-          </RequireAuth>
-        }
-      />
+      />      
     </Routes>
   );
 }

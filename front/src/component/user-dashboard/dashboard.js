@@ -41,36 +41,15 @@ function Dashboard() {
       });
   }
   return (
-    <div className="App">
-      <header className="App-header">
-        <p className=""> Welcome to user Dashboard</p>
-        <fieldset>
-          <legend>User details</legend>
-
-          {Object.keys(userList).length > 0 ? (
-            <>
-              <p className="">
-                <label>Name </label>
-                <span>
-                  {" "}
-                  {userList.first_name} {userList.last_name}
-                </span>
-              </p>
-              <p className="">
-                <label> Email </label>
-                <span> {userList.username} </span>
-              </p>
-              <p className="">
-                <label>Phone </label>
-                <span> {userList.phone} </span>
-              </p>
-            </>
-          ) : (
-            <p>Result not found. </p>
-          )}
-        </fieldset>
-      </header>
+     
+    <div className="col-lg-12">
+      <div className="au-card au-card--no-shadow au-card--no-pad m-b-40 au-card--border">
+        <div className="au-card-title"> 
+        Welcome to dashboard  
+        </div>
+      </div>
     </div>
+     
   );
 }
 

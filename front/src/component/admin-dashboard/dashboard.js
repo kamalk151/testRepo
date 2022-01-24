@@ -1,54 +1,55 @@
-import { useEffect, useState } from 'react'
-import axios from './../api/baseAxios'
-/**
- *
- */
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "./../api/baseAxios";
+import { AppContext } from "../../context";
+
 function Dashboard() {
-  const [user, setUser] = useState([])
+  let navigate = useNavigate();
+  let [userList, setUser] = useState({});
+  let contextApi = useContext(AppContext);
 
-  useEffect(() => {
-    userList();
-  },[]);
+  useEffect(() => {    
+    getUsers();
+  }, [contextApi.users.token]);
 
-  function userList() {
-    axios.get('admin/user-list')
-    .then(result => {
-      setUser(result.data)
-      //console.log(result)
-    }).catch(err => {
-      console.log(err)
-    })
+  async function getUsers() {
+    console.log(contextApi.users.userData);
+    await axios
+      .post(
+        "http://localhost:1000/users/user-details",
+        {
+          id: contextApi.users.userData._id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            authorization: `Bearer ${contextApi.users.token}`,
+          },
+        }
+      )
+      .then(({ data }) => {
+        //console.log(data, "fronted");
+        setUser(data.data);
+        if (data.token !== undefined) {
+          contextApi.dispatchUserEvent("updateToken", { token: data.token });
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          return navigate("/logout");
+        }
+      });
   }
-
   return (
-    console.log(user),
-    <div className="App">
-      <header className="App-header">
-        <p className=""> Welcome to our admin site </p>
-        <table className='table'>
-          <thead>
-            <tr>
-              <th className=''>Name</th>
-              <th className=''>Role</th>
-              <th className=''>Username</th>
-              <th className=''>Phone</th>
-              <th className=''>Gender</th>
-            </tr>          
-          </thead>
-        <tbody>
-         { user && user.data && user.data.map((val,index)=>{
-          return <tr key={index}>
-            <th className=''> {val.first_name + ' ' + val.last_name } </th>
-            <th className=''> {val.role_id } </th>
-            <th className=''> {val.username } </th>
-            <th className=''> {val.phone } </th>
-            <th className=''> {val.gender } </th>
-          </tr>
-         })}
-         </tbody>
-        </table>
-      </header>
+     
+    <div className="col-lg-12">
+      <div className="au-card au-card--no-shadow au-card--no-pad m-b-40 au-card--border">
+        <div className="au-card-title"> 
+        Welcome to dashboard  
+        </div>
+      </div>
     </div>
+     
   );
 }
 
