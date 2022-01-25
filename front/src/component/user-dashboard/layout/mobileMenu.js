@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import logo from './../../../assets/images/icon/logo.png'
+import logo from "./../../../assets/images/icon/logo.png";
 
 function MobileMenu() {
-  
   return (
     <>
       {/* HEADER MOBILE  */}
@@ -10,7 +9,7 @@ function MobileMenu() {
         <div className="header-mobile__bar">
           <div className="container-fluid">
             <div className="header-mobile-inner">
-              <Link to={''} className="logo">
+              <Link to={"/"} className="logo">
                 <img src={logo} alt="CoolAdmin" />
               </Link>
               <button className="hamburger hamburger--slider" type="button">
@@ -48,7 +47,7 @@ function MobileMenu() {
           </div>
         </nav>
       </header>
-    {/* END HEADER MOBILE */}
+      {/* END HEADER MOBILE */}
     </>
   );
 }

@@ -28,14 +28,13 @@ function Login() {
       })
       .then(({ data }) => {
         console.log(data, "======");
+        alert("Successfully logged-in");
         contextApi.dispatchUserEvent("login", {
           loginStatus: true,
           userData: data.data,
           token: data.token,
           role: data.data.role.role,
         });
-
-        alert("Successfully logged-in");
         navigate("/about");
       })
       .catch((error) => {
@@ -68,7 +67,6 @@ function Login() {
           >
             <Form.Group className="  login__field" controlId="email">
               <i className="login__icon fas fa-user"></i>
-
               <Form.Control
                 type="text"
                 className="login__input"

@@ -21,15 +21,29 @@ function MyRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/service" element={<Service />} />
       <Route path="/about" element={<About />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
       <Route path="/forget" element={<Forget />} />
       <Route path="/logout" element={<Logout />} />
 
       <Route
+        path="/login"
+        element={
+          <ProtectPage>
+            <Login />
+          </ProtectPage>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <ProtectPage>
+            <Signup />
+          </ProtectPage>
+        }
+      />
+      <Route
         path="/admin/*"
         element={
-          <RequireAuth redirectTo="/login">
+          <RequireAuth userType="admin" redirectTo="/login">
             <AdminDashboard />
           </RequireAuth>
         }
@@ -37,11 +51,11 @@ function MyRoutes() {
       <Route
         path="/user/*"
         element={
-          <RequireAuth redirectTo="/login">
+          <RequireAuth userType="user" redirectTo="/login">
             <Dashboard />
           </RequireAuth>
         }
-      />      
+      />
     </Routes>
   );
 }
@@ -52,11 +66,31 @@ function MyRoutes() {
  * @param {redirectTo}
  * @returns
  */
-function RequireAuth({ children, redirectTo }) {
+function RequireAuth({ children, redirectTo, userType }) {
   const { users } = useContext(AppContext);
   console.log(users.loginStatus, "require path");
   let isAuthenticated = users.loginStatus;
-  return isAuthenticated ? children : <Navigate to={redirectTo} />;
+  return isAuthenticated && userType === users.role ? (
+    children
+  ) : (
+    <Navigate to={redirectTo} />
+  );
+}
+
+/**
+ * Component to protect pages
+ * @param {children}
+ * @param {redirectTo}
+ * @returns
+ */
+function ProtectPage({ children }) {
+  const { users } = useContext(AppContext);
+  let isAuthenticated = users.loginStatus;
+  return isAuthenticated && users.role !== "" && users.role !== undefined ? (
+    <Navigate to={"/" + users.role} />
+  ) : (
+    children
+  );
 }
 
 export default MyRoutes;

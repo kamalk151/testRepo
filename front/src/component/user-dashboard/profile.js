@@ -1,95 +1,81 @@
 import { useEffect, useState, useContext, Component } from "react";
+import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/baseAxios";
+import { AppContext } from "./../../context";
 
 class Profile extends Component {
-  
+  constructor() {
+    super();
+    this.context = consumer(AppContext);
+    this.state = {
+      contextApi: this.context,
+    };
+  }
   render() {
+    console.log(this.state.contextApi, "=====", AppContext);
     return (
       <div className="row">
         <div className="col-lg-11">
-          <div className="table-responsive table--no-card m-b-30">
-            <table className="table table-borderless table-striped table-earning">
-              <thead>
-                <tr>
-                  <th>date</th>
-                  <th>order ID</th>
-                  <th>name</th>
-                  <th className="text-right">price</th>
-                  <th className="text-right">quantity</th>
-                  <th className="text-right">total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>2018-09-29 05:57</td>
-                  <td>100398</td>
-                  <td>iPhone X 64Gb Grey</td>
-                  <td className="text-right">$999.00</td>
-                  <td className="text-right">1</td>
-                  <td className="text-right">$999.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-28 01:22</td>
-                  <td>100397</td>
-                  <td>Samsung S8 Black</td>
-                  <td className="text-right">$756.00</td>
-                  <td className="text-right">1</td>
-                  <td className="text-right">$756.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-27 02:12</td>
-                  <td>100396</td>
-                  <td>Game Console Controller</td>
-                  <td className="text-right">$22.00</td>
-                  <td className="text-right">2</td>
-                  <td className="text-right">$44.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-26 23:06</td>
-                  <td>100395</td>
-                  <td>iPhone X 256Gb Black</td>
-                  <td className="text-right">$1199.00</td>
-                  <td className="text-right">1</td>
-                  <td className="text-right">$1199.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-25 19:03</td>
-                  <td>100393</td>
-                  <td>USB 3.0 Cable</td>
-                  <td className="text-right">$10.00</td>
-                  <td className="text-right">3</td>
-                  <td className="text-right">$30.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-29 05:57</td>
-                  <td>100392</td>
-                  <td>Smartwatch 4.0 LTE Wifi</td>
-                  <td className="text-right">$199.00</td>
-                  <td className="text-right">6</td>
-                  <td className="text-right">$1494.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-24 19:10</td>
-                  <td>100391</td>
-                  <td>Camera C430W 4k</td>
-                  <td className="text-right">$699.00</td>
-                  <td className="text-right">1</td>
-                  <td className="text-right">$699.00</td>
-                </tr>
-                <tr>
-                  <td>2018-09-22 00:43</td>
-                  <td>100393</td>
-                  <td>USB 3.0 Cable</td>
-                  <td className="text-right">$10.00</td>
-                  <td className="text-right">3</td>
-                  <td className="text-right">$30.00</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="card-body">
+            <div className="card-title">
+              <h3 className="text-center title-2"> Profile Update </h3>
+            </div>
+            <hr />
+            <form action="" method="post" novalidate="novalidate">
+              <div className="form-group">
+                <label htmlFor="name" className="control-label mb-1">
+                  First Name
+                </label>
+                <input
+                  id="first_name"
+                  name="first_name"
+                  type="text"
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group has-success">
+                <label htmlfor="last_name" className="control-label mb-1">
+                  Last Name
+                </label>
+                <input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  className="form-control cc-name valid"
+                  autoComplete="name"
+                />
+              </div>
+              <div className="form-group has-success">
+                <label htmlforor="user name" className="control-label mb-1">
+                  UserName
+                </label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  className="form-control cc-name valid"
+                  autoComplete="username"
+                />
+              </div>
+              <div className="form-group has-success">
+                <label htmlfor="phone" className="control-label mb-1">
+                  Phone
+                </label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="text"
+                  className="form-control cc-name valid"
+                  autoComplete="phone"
+                />
+              </div>
+              <button type="submit" value="Update" className="btn btn-primary">
+                Update
+              </button>
+            </form>
           </div>
         </div>
-         
       </div>
     );
   }

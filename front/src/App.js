@@ -26,8 +26,8 @@ class App extends Component {
   dispatchUserEvent = function (actionType, payload = {}) {
     switch (actionType) {
       case "login":
-        console.log(this.state, " stat ");
         this.setState({ ...this.state, ...payload });
+        console.log(this.state, " stat ");
         return;
       case "logout":
         this.setState({
@@ -35,7 +35,7 @@ class App extends Component {
           loginStatus: false,
           userData: "",
           token: false,
-          role: false
+          role: false,
         });
         return;
       case "updateToken":
@@ -67,11 +67,12 @@ function RefreshToken(dispatchUserEvent) {
   axios
     .post("auth/refresh-token")
     .then((res) => {
+      console.log(res);
       dispatchUserEvent("login", {
         loginStatus: true,
         userData: res.data.data,
         token: res.data.token,
-        role: res.role,
+        role: res.data.role,
       });
     })
     .catch((err) => {

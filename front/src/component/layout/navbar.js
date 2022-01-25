@@ -1,9 +1,7 @@
 import "./../../assets/login.css";
 import { NavLink } from "react-router-dom";
 
-
 function Navbar(props) {
-  
   return (
     <div className="App">
       <header className="App-header">
@@ -27,18 +25,19 @@ function Navbar(props) {
                 <NavLink to="/signup">SignUp </NavLink>
               </li>
             </>
+          ) : props.users.role === "user" ? (
+            <li className="inline pad-10">
+              <NavLink to="/user/dashboard">Dashboard </NavLink>
+            </li>
           ) : (
-            <>
-              <li className="inline pad-10">
-                <NavLink to="/user/dashboard">Dashboard </NavLink>
-              </li>
-              <li className="inline pad-10">
-                <NavLink to="/admin/dashboard">Admin Dashboard </NavLink>
-              </li>
-              <li className="inline pad-10">
-                <NavLink to="/logout">Logout </NavLink>
-              </li>
-            </>
+            <li className="inline pad-10">
+              <NavLink to="/admin/dashboard">Admin Dashboard </NavLink>
+            </li>
+          )}
+          {props.users.loginStatus === true && (
+            <li className="inline pad-10">
+              <NavLink to="/logout">Logout </NavLink>
+            </li>
           )}
         </ul>
       </header>
