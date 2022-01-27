@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, Component } from "react";
+import { useEffect, useState, useContext, PureComponent } from "react";
 import { Routes,Route } from "react-router-dom";
 import "./../../assets/user/css/font-face.css";
 import "./../../assets/user/js/main.js";
@@ -20,24 +20,38 @@ import Dashboard from "./dashboard";
 import Setting from "./setting";
 import Chat from "./chat";
 import Profile from "./profile";
+import AppContext from "../../context";
 
-class Index extends Component {
+class Index extends PureComponent {
+  static contextType = AppContext
+  constructor(){
+    super()
+    this.state = {
+      userData:{}      
+    }
+  }
+
+  componentDidMount() {
+    const {users} = this.context
+    this.setState({userData: users})
+  }
+
   render() {
     return (
       <div className=" layout user-layout">
         <div className="page-wrapper">
           {/* MAIN CONTENT */}
-          <div class="page-container">
+          <div className="page-container">
             <Sidebar />
             <Header />
             <div className="main-content">
               <div className="section__content section__content--p30">
                 <div className="container-fluid">
                   <Routes>
-                    <Route path="/" element = {<Dashboard />} />
-                    <Route path="chat" element = {<Chat />} />  
-                    <Route path="setting" element = {<Setting />} />  
-                    <Route path="profile" element = {<Profile />} />  
+                    <Route path="/" element = {<Dashboard users={this.state.userData} />} />
+                    <Route path="chat" element = {<Chat users={this.state.userData} />} />  
+                    <Route path="setting" element = {<Setting users={this.state.userData} />} />  
+                    <Route path="profile" element = {<Profile users={this.state.userData} />} />  
                   </Routes>
                 </div>
               </div>

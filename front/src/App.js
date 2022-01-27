@@ -4,7 +4,7 @@ import axios from "./component/api/baseAxios";
 import cookie from "react-cookies";
 import { BrowserRouter as Router } from "react-router-dom";
 import MyRoutes from "./routes";
-import { AppContext } from "./context";
+import AppContext, { AppProvider}  from "./context";
 import Navbar from "./component/layout/navbar";
 
 class App extends Component {
@@ -48,7 +48,7 @@ class App extends Component {
 
   render() {
     return (
-      <AppContext.Provider
+      <AppProvider
         value={{ dispatchUserEvent: this.dispatchUserEvent, users: this.state }}
       >
         <Router>
@@ -57,7 +57,7 @@ class App extends Component {
             <MyRoutes />
           </React.StrictMode>
         </Router>
-      </AppContext.Provider>
+      </AppProvider>
     );
   }
 }

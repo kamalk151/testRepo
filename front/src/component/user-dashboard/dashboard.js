@@ -1,14 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "./../api/baseAxios";
-import { AppContext } from "../../context";
+import AppContext from "../../context";
 
 function Dashboard() {
   let navigate = useNavigate();
   let [userList, setUser] = useState({});
   let contextApi = useContext(AppContext);
 
-  useEffect(() => {    
+  useEffect(() => {  
     getUsers();
   }, [contextApi.users.token]);
 

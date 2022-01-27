@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useContext } from "react";
-import { AppContext } from "./context";
+import AppContext from "./context";
 import About from "./component/about";
 import Home from "./component/index";
 import Login from "./component/login";

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import axios from "./api/baseAxios";
-import { AppContext } from "./../context";
+import AppContext from "./../context";
 import { Link, useNavigate } from "react-router-dom";
 /**
  *

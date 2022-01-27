@@ -1,20 +1,49 @@
 import { useEffect, useState, useContext, Component } from "react";
-import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/baseAxios";
-import { AppContext } from "./../../context";
+import axios from "../api/baseAxios"; 
 
-class Profile extends Component {
-  constructor() {
-    super();
-    this.context = consumer(AppContext);
+class Profile extends Component { 
+  constructor(props) {
+    super(props);     
     this.state = {
-      contextApi: this.context,
+      userData:{}
     };
+  } 
+
+  getUsers = async (data) => { 
+   
+    await axios
+      .post(
+        "users/user-details",
+        {
+          id: data.userData._id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            authorization: `Bearer ${data.userData.token}`,
+          },
+        }
+      )
+      .then(({ data }) => {
+        console.log(data, "fronted");
+        this.setState({userData: data.data});         
+      })
+      .catch((err) => {
+        if (err.response) {
+          return this.props.navigate("/logout");
+        }
+      });
   }
+
+  componentDidMount() { 
+    console.log(this.props.users.userData._id,'hhhhh')
+    this.getUsers(this.props.users)
+  }
+
   render() {
-    console.log(this.state.contextApi, "=====", AppContext);
-    return (
+    
+    return ( 
       <div className="row">
         <div className="col-lg-11">
           <div className="card-body">
@@ -22,7 +51,7 @@ class Profile extends Component {
               <h3 className="text-center title-2"> Profile Update </h3>
             </div>
             <hr />
-            <form action="" method="post" novalidate="novalidate">
+            <form action="" method="post" noValidate="novalidate">
               <div className="form-group">
                 <label htmlFor="name" className="control-label mb-1">
                   First Name
@@ -47,7 +76,7 @@ class Profile extends Component {
                 />
               </div>
               <div className="form-group has-success">
-                <label htmlforor="user name" className="control-label mb-1">
+                <label htmlFor="user name" className="control-label mb-1">
                   UserName
                 </label>
                 <input
@@ -59,7 +88,7 @@ class Profile extends Component {
                 />
               </div>
               <div className="form-group has-success">
-                <label htmlfor="phone" className="control-label mb-1">
+                <label htmlFor="phone" className="control-label mb-1">
                   Phone
                 </label>
                 <input
@@ -76,9 +105,13 @@ class Profile extends Component {
             </form>
           </div>
         </div>
-      </div>
+      </div> 
     );
   }
 }
 
-export default Profile;
+function WithNavigate(props) {
+  const navigate = useNavigate()
+  return <Profile {...props} navigate={ navigate } /> 
+}
+export default WithNavigate;

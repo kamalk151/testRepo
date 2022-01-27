@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/baseAxios";
-import { AppContext } from "../../context";
+import   AppContext from "../../context";
 
 function Setting() {
   let navigate = useNavigate();
