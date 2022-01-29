@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/baseAxios";
-import   AppContext from "../../context";
+import AppContext from "../../context";
 
 function Setting() {
   let navigate = useNavigate();
@@ -16,7 +16,7 @@ function Setting() {
     console.log(contextApi.users.userData);
     await axios
       .post(
-        "http://localhost:1000/users/user-details",
+        "users/user-details",
         {
           id: contextApi.users.userData._id,
         },
@@ -40,6 +40,7 @@ function Setting() {
         }
       });
   }
+
   return (
     <div className="App">
       <header className="App-header">

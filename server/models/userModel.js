@@ -10,7 +10,7 @@ const userSchema = new Mongoose.Schema(
     role: { type: Mongoose.Schema.Types.ObjectId, ref: "roles" },
     gender: { type: String, required: true },
     profile_img: String,
-    status: { type: Number, default: 1 },
+    status: { type: String, default: "active" },
   },
   { timestamps: true }
 );

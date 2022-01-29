@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import MobileMenu from "./mobileMenu";
-import logo from "./../../../assets/images/icon/logo.png";
+import logo from "./../../../assets/user/images/icon/user-logo.png";
 
 function Sidebar() {
   return (

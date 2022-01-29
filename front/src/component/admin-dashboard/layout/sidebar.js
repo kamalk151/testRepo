@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import MobileMenu from "./mobileMenu";
-import logo from "./../../../assets/images/icon/logo.png";
+import logo from "./../../../assets/admin/images/icon/admin-logo.png";
 
 function Sidebar() {
   return (
@@ -32,9 +32,9 @@ function Sidebar() {
                 </Link>
               </li>
               <li>
-                <Link to="/admin/profile">
+                <Link to="/admin/customers">
                   <i className="fas fa-table"></i>
-                  Profile
+                  Customer
                 </Link>
               </li>
               <li>

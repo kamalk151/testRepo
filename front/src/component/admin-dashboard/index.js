@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, Component } from "react";
-import { Routes,Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./../../assets/admin/css/font-face.css";
 import "./../../assets/admin/js/main.js";
 import "./../../assets/admin/vendor/font-awesome-4.7/css/font-awesome.min.css";
@@ -19,26 +19,25 @@ import Header from "./layout/header";
 import Dashboard from "./dashboard";
 import Setting from "./setting";
 import Chat from "./chat";
-import Profile from "./profile";
+import Customers from "./customers";
 
 class Index extends Component {
-
   render() {
     return (
       <div className=" layout user-layout">
         <div className="page-wrapper">
           {/* MAIN CONTENT */}
-          <div class="page-container">
+          <div className="page-container">
             <Sidebar />
             <Header />
             <div className="main-content">
               <div className="section__content section__content--p30">
                 <div className="container-fluid">
                   <Routes>
-                    <Route path="/" element = {<Dashboard />} />
-                    <Route path="chat" element = {<Chat />} />  
-                    <Route path="setting" element = {<Setting />} />  
-                    <Route path="profile" element = {<Profile />} />  
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="chat" element={<Chat />} />
+                    <Route path="setting" element={<Setting />} />
+                    <Route path="customers" element={<Customers />} />
                   </Routes>
                 </div>
               </div>

@@ -45,7 +45,7 @@ const updateById = async (req, res) => {
     if (!req.body) {
       return res
         .status(400)
-        .json({ status: "error", msgText: "invalid request" });
+        .json({ status: "error", msgText: lang.invalid_request });
     }
 
     let updateData = {
@@ -56,6 +56,11 @@ const updateById = async (req, res) => {
     userModel.findByIdAndUpdate(req.body.id, updateData, function (err, data) {
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
+      }
+      if (data === null) {
+        return res
+          .status(400)
+          .json({ status: "error", msgText: lang.invalid_request });
       }
       return res.status(200).json({
         status: "success",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "./../../../assets/images/icon/logo.png";
+import logo from "./../../../assets/admin/images/icon/admin-logo.png";
 
 function MobileMenu() {
   return (

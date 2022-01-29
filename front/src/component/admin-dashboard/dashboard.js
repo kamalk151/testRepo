@@ -8,7 +8,7 @@ function Dashboard() {
   let [userList, setUser] = useState({});
   let contextApi = useContext(AppContext);
 
-  useEffect(() => {    
+  useEffect(() => {
     getUsers();
   }, [contextApi.users.token]);
 
@@ -41,15 +41,11 @@ function Dashboard() {
       });
   }
   return (
-     
     <div className="col-lg-12">
       <div className="au-card au-card--no-shadow au-card--no-pad m-b-40 au-card--border">
-        <div className="au-card-title"> 
-        Welcome to dashboard  
-        </div>
+        <div className="au-card-title">Welcome to Admin dashboard</div>
       </div>
     </div>
-     
   );
 }
 

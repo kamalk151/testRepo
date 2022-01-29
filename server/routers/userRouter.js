@@ -36,7 +36,7 @@ const verifyToken = async (req, res, next) => {
           //401 unautohrized response (request has not been completed)
           return res.status(401).json({
             status: "error",
-            msgText: "Either token has been a  expired or invalid." + error,
+            msgText: "Either token has been expired or invalid." + error,
           });
         } else {
           next();
@@ -45,14 +45,14 @@ const verifyToken = async (req, res, next) => {
         //401 unautohrized response (request has not been completed)
         return res.status(401).json({
           status: "error",
-          msgText: "Either token has been s  expired or invalid." + error,
+          msgText: "Either token has been expired or invalid." + error,
         });
       }
     }
   } else {
     return res.status(401).json({
       status: "error",
-      msgText: "Either token has been c expired or not assigned.",
+      msgText: "Either token has been expired or not assigned.",
     });
   }
 };
@@ -76,7 +76,7 @@ router.use(
 
 router.post("/user-details", detailsById);
 router.post("/create", createUser);
-router.put("/update-by-id", updateById);
+router.patch("/update-by-id", updateById);
 router.put("/reset-password", resetPassword);
 
 module.exports = router;

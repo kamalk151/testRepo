@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, PureComponent } from "react";
-import { Routes,Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./../../assets/user/css/font-face.css";
 import "./../../assets/user/js/main.js";
 import "./../../assets/user/vendor/font-awesome-4.7/css/font-awesome.min.css";
@@ -23,17 +23,20 @@ import Profile from "./profile";
 import AppContext from "../../context";
 
 class Index extends PureComponent {
-  static contextType = AppContext
-  constructor(){
-    super()
+  static contextType = AppContext;
+  constructor() {
+    super();
     this.state = {
-      userData:{}      
-    }
+      userData: {},
+    };
   }
 
   componentDidMount() {
-    const {users} = this.context
-    this.setState({userData: users})
+    const { users } = this.context;
+    console.log(users, "users context");
+    this.setState({ userData: users }, () => {
+      console.log(this.state, " updated state value");
+    });
   }
 
   render() {
@@ -48,10 +51,26 @@ class Index extends PureComponent {
               <div className="section__content section__content--p30">
                 <div className="container-fluid">
                   <Routes>
-                    <Route path="/" element = {<Dashboard users={this.state.userData} />} />
-                    <Route path="chat" element = {<Chat users={this.state.userData} />} />  
-                    <Route path="setting" element = {<Setting users={this.state.userData} />} />  
-                    <Route path="profile" element = {<Profile users={this.state.userData} />} />  
+                    <Route
+                      path="/"
+                      element={<Dashboard users={this.state.userData} />}
+                    />
+                    <Route
+                      path="/dashboard"
+                      element={<Dashboard users={this.state.userData} />}
+                    />
+                    <Route
+                      path="chat"
+                      element={<Chat users={this.state.userData} />}
+                    />
+                    <Route
+                      path="setting"
+                      element={<Setting users={this.state.userData} />}
+                    />
+                    <Route
+                      path="profile"
+                      element={<Profile users={this.state.userData} />}
+                    />
                   </Routes>
                 </div>
               </div>
@@ -63,4 +82,4 @@ class Index extends PureComponent {
   }
 }
 
-export default  Index;
+export default Index;

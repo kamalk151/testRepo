@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const lang = require("../libs/lang/lang");
+const { refreshToken } = require("./../libs/helper/commonFiles");
 
 /**
  * Fetch User list
@@ -30,12 +31,13 @@ const userList = async (req, res) => {
  */
 const userDelete = async (req, res) => {
   try {
+    console.log(req.body);
     if (!req.body.id) {
       return res
         .status(401)
         .json({ status: "error", msgText: "Invalid Request" });
     }
-    userModel.deleteById(req.body.id, (err, data) => {
+    userModel.deleteOne({ _id: req.body.id }, (err, data) => {
       if (err) {
         return res.status(500).json({ status: "error", msgText: err });
       }
@@ -44,7 +46,7 @@ const userDelete = async (req, res) => {
         .json({ status: "success", msgText: lang.got_deleted });
     });
   } catch (err) {
-    return res.status(500).json({ status: "errors", msgText: err });
+    return res.status(500).json({ status: "errors", msgText: "" + err });
   }
 };
 

@@ -4,7 +4,7 @@ import axios from "./component/api/baseAxios";
 import cookie from "react-cookies";
 import { BrowserRouter as Router } from "react-router-dom";
 import MyRoutes from "./routes";
-import AppContext, { AppProvider}  from "./context";
+import AppContext, { AppProvider } from "./context";
 import Navbar from "./component/layout/navbar";
 
 class App extends Component {
@@ -15,6 +15,10 @@ class App extends Component {
       userData: "",
       token: false,
       role: false,
+      status: {
+        active: "Active",
+        inActive: "In-Active",
+      },
     };
     this.dispatchUserEvent = this.dispatchUserEvent.bind(this);
 
