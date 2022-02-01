@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext, PureComponent } from "react";
+import io from 'socket.io-client'
 import { Routes, Route } from "react-router-dom";
 import "./../../assets/user/css/font-face.css";
 import "./../../assets/user/js/main.js";
@@ -18,16 +19,18 @@ import Sidebar from "./layout/sidebar";
 import Header from "./layout/header";
 import Dashboard from "./dashboard";
 import Setting from "./setting";
-import Chat from "./chat";
+import Chat from "./chat1";
 import Profile from "./profile";
 import AppContext from "../../context";
 
 class Index extends PureComponent {
+  
   static contextType = AppContext;
   constructor() {
     super();
     this.state = {
       userData: {},
+      socket:''
     };
   }
 

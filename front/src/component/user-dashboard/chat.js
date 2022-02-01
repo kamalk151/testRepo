@@ -2,20 +2,6 @@ import { useEffect, useState, useContext, Component } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../../assets/user/css/font-face.css";
 import "./../../assets/user/js/main.js";
-import "./../../assets/user/vendor/font-awesome-4.7/css/font-awesome.min.css";
-import "./../../assets/user/vendor/font-awesome-5/css/fontawesome-all.min.css";
-import "./../../assets/user/vendor/mdi-font/css/material-design-iconic-font.min.css";
-import "./../../assets/user/vendor/animsition/animsition.min.css";
-import "./../../assets/user/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css";
-import "./../../assets/user/vendor/wow/animate.css";
-import "./../../assets/user/vendor/css-hamburgers/hamburgers.min.css";
-import "./../../assets/user/vendor/select2/select2.min.css";
-import "./../../assets/user/vendor/perfect-scrollbar/perfect-scrollbar.css";
-import "./../../assets/user/css/theme.css";
-
-import axios from "../api/baseAxios";
-import Sidebar from "./layout/sidebar";
-import Header from "./layout/header";
 
 class Chat extends Component {
   render() {

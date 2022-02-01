@@ -13,6 +13,7 @@ class Profile extends Component {
       username: "",
       phone: "",
       createdAt: "",
+      news: "",
     };
   }
 
@@ -66,6 +67,7 @@ class Profile extends Component {
       phone: this.state.phone,
     };
     console.log(userData, "user data");
+    this.setState({news:userData.first_name})
     let headers = {
       headers: {
         authorization: `Bearer ${this.props.users.token}`,
@@ -87,6 +89,15 @@ class Profile extends Component {
 
   componentDidMount() {
     this.getUsers(this.props.users);
+    console.log('asdf asdfasd')
+  }
+
+  componentWillUpdate() {
+    console.log('will update')
+  }
+
+  componentDidUpdate(){
+    console.log('did update')
   }
 
   render() {

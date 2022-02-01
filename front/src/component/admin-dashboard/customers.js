@@ -88,7 +88,7 @@ class Userslist extends Component {
 
     return (
       <div className="row">
-        <div className="col-lg-11">
+        <div className="col-lg-12">
           <div className="table-responsive table--no-card m-b-30">
             <table className="table table-borderless table-striped table-earning">
               <thead>
